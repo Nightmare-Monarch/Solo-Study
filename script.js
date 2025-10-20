@@ -12,7 +12,7 @@ let subjects = {
   
   const expPerLevel = 100;
   const marksPerLevel = 5;
-  const expPerHour = 10; // each study hour = 10 EXP
+  const expPerHour = 10;
   const expPP = 20;
   const expQuiz = 25;
   
@@ -23,97 +23,50 @@ let subjects = {
   if(localStorage.getItem("studyData")) subjects = JSON.parse(localStorage.getItem("studyData"));
   if(localStorage.getItem("sessionHistory")) sessionHistory = JSON.parse(localStorage.getItem("sessionHistory"));
   
-  function saveState() {
+  function saveState(){
     undoStack.push(JSON.stringify(subjects));
     if(undoStack.length>50) undoStack.shift();
     localStorage.setItem("studyData", JSON.stringify(subjects));
   }
   
   function addSession(){
-    const input = document.getElementById("logInput").value.trim().toLowerCase();
+    const input=document.getElementById("logInput").value.trim().toLowerCase();
     if(!input) return;
   
     saveState();
-    redoStack = [];
+    redoStack=[];
   
-    // save history
     sessionHistory.push(input);
     localStorage.setItem("sessionHistory", JSON.stringify(sessionHistory));
-    updateHistory();
   
     processSession(input);
-    document.getElementById("logInput").value = "";
+    document.getElementById("logInput").value="";
     updateTable();
   }
   
   function processSession(input){
-    const parts = input.split(" ");
-    const code = parts[0];
-    if(!subjects[code]) { alert("Unknown subject: "+code); return; }
+    const parts=input.split(" ");
+    const code=parts[0];
+    if(!subjects[code]){ alert("Unknown subject: "+code); return; }
   
-    let expGain = 0;
+    let expGain=0;
     for(let i=1;i<parts.length;i++){
-      const t = parts[i];
+      const t=parts[i];
       if(t==="pp") expGain+=expPP;
       else if(t==="q") expGain+=expQuiz;
-      else if(!isNaN(parseFloat(t))) expGain += parseFloat(t)*expPerHour;
+      else if(!isNaN(parseFloat(t))) expGain+=parseFloat(t)*expPerHour;
     }
   
-    subjects[code].exp += expGain;
-    while(subjects[code].exp >= expPerLevel){
-      subjects[code].exp -= expPerLevel;
-      subjects[code].level +=1;
-      subjects[code].marks += marksPerLevel;
+    subjects[code].exp+=expGain;
+    while(subjects[code].exp>=expPerLevel){
+      subjects[code].exp-=expPerLevel;
+      subjects[code].level+=1;
+      subjects[code].marks+=marksPerLevel;
       if(subjects[code].marks>150) subjects[code].marks=150;
   
       document.getElementById("levelUpSound").play();
       confetti({particleCount:100, spread:70, origin:{y:0.6}});
     }
-  }
-  
-  // History list
-  function updateHistory(){
-    const historyList = document.getElementById("historyList");
-    historyList.innerHTML = "";
-    sessionHistory.forEach((sess,index)=>{
-      const li=document.createElement("li");
-      li.textContent = sess;
-      const delBtn=document.createElement("button");
-      delBtn.textContent="Remove";
-      delBtn.onclick=()=>removeSession(index);
-      li.appendChild(delBtn);
-      historyList.appendChild(li);
-    });
-  }
-  
-  // Remove session
-  function removeSession(index){
-    saveState();
-    redoStack=[];
-  
-    sessionHistory.splice(index,1);
-    localStorage.setItem("sessionHistory", JSON.stringify(sessionHistory));
-  
-    // reset subjects
-    resetSubjects();
-    sessionHistory.forEach(sess=>processSession(sess));
-  
-    updateHistory();
-    updateTable();
-  }
-  
-  function resetSubjects(){
-    subjects = {
-      "sin": { name: "Sinhala", marks: 69, level: 7, exp: 0, icon: "📚" },
-      "sci": { name: "Science", marks: 68, level: 7, exp: 0, icon: "🔬" },
-      "com": { name: "Commerce", marks: 80, level: 8, exp: 0, icon: "💰" },
-      "bud": { name: "Buddhism", marks: 95, level: 10, exp: 0, icon: "🕉️" },
-      "his": { name: "History", marks: 86, level: 9, exp: 0, icon: "🏺" },
-      "dan": { name: "Dancing", marks: 73, level: 8, exp: 0, icon: "💃" },
-      "hea": { name: "Health", marks: 90, level: 9, exp: 0, icon: "💊" },
-      "mat": { name: "Maths", marks: 90, level: 9, exp: 0, icon: "📐" },
-      "eng": { name: "English", marks: 82, level: 8, exp: 0, icon: "📝" }
-    };
   }
   
   function undo(){
@@ -131,12 +84,11 @@ let subjects = {
   }
   
   function updateTable(){
-    const tbody = document.querySelector("#trackerTable tbody");
+    const tbody=document.querySelector("#trackerTable tbody");
     tbody.innerHTML="";
     for(let key in subjects){
       const sub=subjects[key];
       const tr=document.createElement("tr");
-  
       tr.innerHTML=`<td>${sub.icon} ${sub.name}</td>
                     <td>${sub.marks}</td>
                     <td>${sub.level}</td>
@@ -150,7 +102,19 @@ let subjects = {
     }
   }
   
-  // Initial load
+  function resetSubjects(){
+    subjects = {
+      "sin": { name: "Sinhala", marks: 69, level: 7, exp: 0, icon: "📚" },
+      "sci": { name: "Science", marks: 68, level: 7, exp: 0, icon: "🔬" },
+      "com": { name: "Commerce", marks: 80, level: 8, exp: 0, icon: "💰" },
+      "bud": { name: "Buddhism", marks: 95, level: 10, exp: 0, icon: "🕉️" },
+      "his": { name: "History", marks: 86, level: 9, exp: 0, icon: "🏺" },
+      "dan": { name: "Dancing", marks: 73, level: 8, exp: 0, icon: "💃" },
+      "hea": { name: "Health", marks: 90, level: 9, exp: 0, icon: "💊" },
+      "mat": { name: "Maths", marks: 90, level: 9, exp: 0, icon: "📐" },
+      "eng": { name: "English", marks: 82, level: 8, exp: 0, icon: "📝" }
+    };
+  }
+  
   updateTable();
-  updateHistory();
   
