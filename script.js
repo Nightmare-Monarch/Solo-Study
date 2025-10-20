@@ -91,24 +91,22 @@ function handleSessionInput() {
 
 // Add session XP & marks
 function addSession(subjectCode,totalMinutes,isPP,isQuiz){
-  const subject = subjects.find(s=>s.code===subjectCode);
+  const subject = subjects.find(s => s.code === subjectCode);
   if(!subject) return alert("Invalid subject code");
 
   // XP calculation: 1 hour = 15 XP
-  let xpGain = (totalMinutes/60)*15;
+  let xpGain = (totalMinutes / 60) * 15;
   if(isPP) xpGain += 5; // practice problems bonus
   if(isQuiz) xpGain += 3; // quiz bonus
 
   subject.xp += xpGain;
 
-  // Convert XP to marks: 50 XP → 50 marks
-  while(subject.xp >= 50){
-    subject.xp -= 50;
-    subject.marks += 50; // scale marks
-  }
+  // Convert XP to marks: 50 XP → 50 marks proportionally
+  let marksGain = (xpGain / 50) * 50; // 50 XP = 50 marks
+  subject.marks += marksGain;
 
   // Prevent marks exceeding 100
-  if(subject.marks>100) subject.marks=100;
+  if(subject.marks > 100) subject.marks = 100;
 
   updateUI();
 }
