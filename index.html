@@ -16,11 +16,10 @@
     </div>
 
     <div class="undo-redo">
-  <button class="btn" onclick="undo()">Undo</button>
-  <button class="btn" onclick="redo()">Redo</button>
-  <button class="btn reset-btn" onclick="resetAll()">Reset All</button>
-</div>
-
+      <button class="btn" onclick="undo()">Undo</button>
+      <button class="btn" onclick="redo()">Redo</button>
+      <button class="btn reset-btn" onclick="resetAll()">Reset All</button>
+    </div>
 
     <div id="subjectContainer" class="subjects"></div>
 
@@ -28,18 +27,20 @@
       <a href="timer.html" class="menu-btn">⏱️ Timer</a>
       <a href="history.html" class="menu-btn">📜 History</a>
     </div>
-
-    <audio id="levelupSound" src="sounds/levelup.mp3"></audio>
-    <audio id="punishSound" src="sounds/punish.mp3"></audio>
   </div>
-<div id="bottomBar">
-  <div class="bottom-bar-content">
-    <strong>Total Marks: <span id="totalMarksBottom">0</span> / 822</strong>
-    <div class="progress full-marks">
-      <div id="fullMarksFill" class="progress-fill"></div>
+
+  <!-- Bottom total marks bar -->
+  <div id="bottomBar">
+    <div class="bottom-bar-content">
+      <strong>Total Marks: <span id="totalMarksBottom">0</span> / 822</strong>
+      <div class="progress full-marks">
+        <div id="fullMarksFill" class="progress-fill"></div>
+      </div>
     </div>
   </div>
-</div>
+
+  <audio id="levelupSound" src="sounds/levelup.mp3"></audio>
+  <audio id="punishSound" src="sounds/punish.mp3"></audio>
 
   <script src="script.js"></script>
 </body>
