@@ -11,10 +11,15 @@
 <h1>Solo-Leveling Study Tracker</h1>
 
 <div class="input-container">
-  <input type="text" id="logInput" placeholder='Enter session(s), e.g. "sci 2 pp q"'>
+  <input type="text" id="logInput" placeholder='e.g., "mat 8" or "bud 5 pp q"'>
   <button onclick="addSession()">Add Session</button>
   <button onclick="undo()">Undo</button>
   <button onclick="redo()">Redo</button>
+</div>
+
+<div class="history-container">
+  <h2>Session History</h2>
+  <ul id="historyList"></ul>
 </div>
 
 <table id="trackerTable">
@@ -30,6 +35,8 @@
   <tbody></tbody>
 </table>
 
+<audio id="levelUpSound" src="levelup.mp3"></audio>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

@@ -41,9 +41,47 @@ body {
     background: #e67e22;
   }
   
+  .history-container {
+    margin-top: 20px;
+    padding: 10px;
+    background: #2c2c44;
+    border-radius: 10px;
+  }
+  
+  .history-container h2 {
+    margin-bottom: 10px;
+    color: #f39c12;
+  }
+  
+  #historyList {
+    list-style: none;
+    padding: 0;
+  }
+  
+  #historyList li {
+    background: #444;
+    margin: 5px 0;
+    padding: 8px 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  #historyList li button {
+    background: #e74c3c;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 8px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+  }
+  
   table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
   }
   
   th, td {
