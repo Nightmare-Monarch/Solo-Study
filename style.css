@@ -154,3 +154,38 @@ body {
 .levelup {
   animation: levelup-flash 0.6s ease-in-out;
 }
+#bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #222233;
+  padding: 15px 30px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+  z-index: 1000;
+}
+
+.bottom-bar-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.bottom-bar-content strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+  color: #00d8ff;
+}
+
+.bottom-bar-content .progress {
+  height: 20px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+}
+
+#fullMarksFill {
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #ff7f50, #ff4500);
+  transition: width 1s ease-in-out;
+}

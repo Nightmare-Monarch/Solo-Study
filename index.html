@@ -16,9 +16,11 @@
     </div>
 
     <div class="undo-redo">
-      <button class="btn" onclick="undo()">Undo</button>
-      <button class="btn" onclick="redo()">Redo</button>
-    </div>
+  <button class="btn" onclick="undo()">Undo</button>
+  <button class="btn" onclick="redo()">Redo</button>
+  <button class="btn reset-btn" onclick="resetAll()">Reset All</button>
+</div>
+
 
     <div id="subjectContainer" class="subjects"></div>
 
@@ -30,6 +32,14 @@
     <audio id="levelupSound" src="sounds/levelup.mp3"></audio>
     <audio id="punishSound" src="sounds/punish.mp3"></audio>
   </div>
+<div id="bottomBar">
+  <div class="bottom-bar-content">
+    <strong>Total Marks: <span id="totalMarksBottom">0</span> / 822</strong>
+    <div class="progress full-marks">
+      <div id="fullMarksFill" class="progress-fill"></div>
+    </div>
+  </div>
+</div>
 
   <script src="script.js"></script>
 </body>
