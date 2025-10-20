@@ -4,32 +4,46 @@
   <meta charset="UTF-8">
   <title>Solo Study Tracker</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>📘 Solo Study Tracker</h1>
-    <nav>
-      <a href="index.html">🏠 Home</a>
-      <a href="stopwatch.html">⏱️ Stopwatch</a>
-      <a href="history.html">📜 History</a>
-    </nav>
-  </header>
+  <div class="container">
+    <h1 class="title">🗡️ Solo Study Tracker</h1>
 
-  <div class="input-section">
-    <input id="sessionInput" placeholder="e.g. sin 1h 30m pp q">
-    <button onclick="handleSessionInput()">Add</button>
-    <button onclick="undo()">Undo</button>
-    <button onclick="redo()">Redo</button>
-    <button onclick="resetAll()">Reset</button>
+
+
+
+
+
+
+    <div class="input-section">
+      <input id="sessionInput" placeholder="e.g. sin 5h 6h pp q">
+      <button class="btn" onclick="handleSessionInput()">Add Session</button>
+    </div>
+
+    <div class="undo-redo">
+      <button class="btn" onclick="undo()">Undo</button>
+      <button class="btn" onclick="redo()">Redo</button>
+      <button class="btn reset-btn" onclick="resetAll()">Reset All</button>
+    </div>
+
+    <div id="subjectContainer" class="subjects"></div>
+
+    <div class="menu">
+      <a href="timer.html" class="menu-btn">⏱️ Timer</a>
+      <a href="history.html" class="menu-btn">📜 History</a>
+    </div>
   </div>
 
-  <div id="subjectContainer"></div>
-
-  <div class="total-bar">
-    <div class="bar">
-      <div id="fullMarksFill" class="fill"></div>
+  <!-- Bottom total marks bar -->
+  <div id="bottomBar">
+    <div class="bottom-bar-content">
+      <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
+      <div class="progress full-marks">
+        <div id="fullMarksFill" class="progress-fill"></div>
+      </div>
     </div>
-    <p>Total Marks: <span id="totalMarksBottom">0</span> / 822</p>
+
   </div>
 
   <audio id="levelupSound" src="sounds/levelup.mp3"></audio>

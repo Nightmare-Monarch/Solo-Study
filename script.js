@@ -1,17 +1,20 @@
 let subjects = JSON.parse(localStorage.getItem("subjects")) || [
-    { name: "Sinhala", code: "sin", marks: 0, xp: 0 },
-    { name: "Science", code: "sci", marks: 0, xp: 0 },
-    { name: "Commerce", code: "com", marks: 0, xp: 0 },
-    { name: "Buddhism", code: "bud", marks: 0, xp: 0 },
-    { name: "History", code: "his", marks: 0, xp: 0 },
-    { name: "Dancing", code: "dan", marks: 0, xp: 0 },
-    { name: "Health", code: "hea", marks: 0, xp: 0 },
-    { name: "Maths", code: "mat", marks: 0, xp: 0 },
-    { name: "English", code: "eng", marks: 0, xp: 0 }
+    { name: "Sinhala", code: "sin", marks: 69, xp: 0 },
+    { name: "Science", code: "sci", marks: 67, xp: 0 },
+    { name: "Commerce", code: "com", marks: 82, xp: 0 },
+    { name: "Buddhism", code: "bud", marks: 95, xp: 0 },
+    { name: "History", code: "his", marks: 86, xp: 0 },
+    { name: "Dancing", code: "dan", marks: 73, xp: 0 },
+    { name: "Health", code: "hea", marks: 90, xp: 0 },
+    { name: "Maths", code: "mat", marks: 90, xp: 0 },
+    { name: "English", code: "eng", marks: 82, xp: 0 }
   ];
   
   let sessionHistory = JSON.parse(localStorage.getItem("sessionHistory")) || [];
   let redoHistory = JSON.parse(localStorage.getItem("redoHistory")) || [];
+  
+  
+  
   
   function saveData() {
     localStorage.setItem("subjects", JSON.stringify(subjects));
@@ -19,6 +22,7 @@ let subjects = JSON.parse(localStorage.getItem("subjects")) || [
     localStorage.setItem("redoHistory", JSON.stringify(redoHistory));
   }
   
+  // Animate numbers smoothly
   function animateNumber(element, start, end, duration=800) {
     const range = end - start;
     let startTime = null;
@@ -31,34 +35,42 @@ let subjects = JSON.parse(localStorage.getItem("subjects")) || [
     requestAnimationFrame(step);
   }
   
+  // Update UI
   function updateUI() {
     const container = document.getElementById("subjectContainer");
     container.innerHTML = "";
   
-    subjects.sort((a,b)=>b.marks - a.marks);
+    subjects.sort((a,b)=>b.marks - a.marks); // Sort by marks
   
     subjects.forEach((s,index)=>{
-      const xpPercent = (s.xp/50)*100;
+      const xpPercent = (s.xp/100)*100; // XP bar max 100
       container.innerHTML += `
         <div class="subject">
-          <strong>${index+1}. ${s.name}</strong> - Marks: <span>${s.marks.toFixed(1)}</span>
-          <div class="progress xp">
-            <div class="fill" style="width:${xpPercent}%"></div>
+          <strong>${index+1}. ${s.name}</strong> - Marks: <span class="marks-value">${s.marks.toFixed(1)}</span>
+          <div class="progress xp-bar">
+            <div class="progress-fill" style="width:${xpPercent}%;"></div>
           </div>
-          <small>${s.xp.toFixed(1)}/50 XP</small>
+          <small>XP: ${s.xp.toFixed(1)}/100</small>
+          <div class="progress marks-bar">
+            <div class="progress-fill" style="width:${s.marks.toFixed(1)}%"></div>
+          </div>
         </div>`;
     });
   
+    // Update total marks bottom bar
     const totalMarks = subjects.reduce((a,b)=>a+b.marks,0);
-    const fill = document.getElementById("fullMarksFill");
-    if(fill) fill.style.width = (totalMarks/822*100).toFixed(1) + "%";
+    const maxMarks = 900; // 9 subjects * 100
     const totalMarksEl = document.getElementById("totalMarksBottom");
     if(totalMarksEl) animateNumber(totalMarksEl, parseFloat(totalMarksEl.textContent)||0, totalMarks);
+    const fill = document.getElementById("fullMarksFill");
+    if(fill) fill.style.width = (totalMarks/maxMarks*100).toFixed(1) + "%";
   }
   
+  // Handle session input like "sci 1h 34m pp q 2h"
   function handleSessionInput() {
     const input = document.getElementById("sessionInput").value.trim().toLowerCase();
     if(!input) return;
+  
     const parts = input.split(" ");
     const subjectCode = parts[0];
     let totalMinutes = 0;
@@ -74,52 +86,75 @@ let subjects = JSON.parse(localStorage.getItem("subjects")) || [
   
     sessionHistory.push(JSON.stringify(subjects));
     redoHistory = [];
+  
     addSession(subjectCode,totalMinutes,isPP,isQuiz);
     document.getElementById("sessionInput").value="";
     saveData();
+  
+  
   }
   
+  // Add session XP & marks
   function addSession(subjectCode,totalMinutes,isPP,isQuiz){
     const subject = subjects.find(s => s.code === subjectCode);
     if(!subject) return alert("Invalid subject code");
   
-    let xpGain = (totalMinutes / 60) * 15; 
-    if(isPP) xpGain += 5;
-    if(isQuiz) xpGain += 3;
+    // XP calculation: 10 hours = 100 XP → 1 hour = 10 XP → 1 min = 0.1667 XP
+    let xpGain = totalMinutes * (100 / 600); 
+    if(isPP) xpGain += 5; // practice problems bonus
+    if(isQuiz) xpGain += 3; // quiz bonus
   
     subject.xp += xpGain;
-    subject.marks += xpGain / 2; // 2xp = 1 mark
   
-    while(subject.xp >= 50){
-      subject.xp -= 50;
-      subject.marks += 50;
-      document.getElementById("levelupSound").play();
-    }
+    // Marks calculation: 10 hours = 100 marks → 1 min = 0.1667 marks
+    let marksGain = totalMinutes * (100 / 600);
+    if(isPP) marksGain += 5;
+    if(isQuiz) marksGain += 3;
   
+    subject.marks += marksGain;
+  
+    // Prevent marks exceeding 100
     if(subject.marks > 100) subject.marks = 100;
+  
+  
+    // Prevent XP exceeding 100
+    if(subject.xp > 100) subject.xp = 100;
+  
+  
+  
+  
     updateUI();
   }
   
+  
+  
+  // Undo / Redo
   function undo(){
     if(sessionHistory.length===0) return alert("Nothing to undo");
     redoHistory.push(JSON.stringify(subjects));
     subjects = JSON.parse(sessionHistory.pop());
-    updateUI(); saveData();
+    updateUI();
+    saveData();
   }
   
   function redo(){
     if(redoHistory.length===0) return alert("Nothing to redo");
     sessionHistory.push(JSON.stringify(subjects));
     subjects = JSON.parse(redoHistory.pop());
-    updateUI(); saveData();
+    updateUI();
+    saveData();
   }
   
+  // Reset all subjects
   function resetAll(){
-    if(!confirm("Reset all progress?")) return;
-    subjects.forEach(s=>{s.marks=0;s.xp=0;});
-    sessionHistory=[]; redoHistory=[];
-    saveData(); updateUI();
+    if(!confirm("Are you sure you want to reset all marks and XP?")) return;
+    subjects.forEach(s=>{s.marks=0; s.xp=0;});
+    sessionHistory=[];
+    redoHistory=[];
+    localStorage.removeItem("history");
+    saveData();
+    updateUI();
+  
   }
   
   window.onload = updateUI;
-  
