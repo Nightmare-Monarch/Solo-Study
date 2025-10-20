@@ -1,4 +1,4 @@
-/* General styles */
+/* General body and heading */
 body {
     font-family: 'Arial', sans-serif;
     background: #1e1e2f;
@@ -6,14 +6,13 @@ body {
     padding: 20px;
   }
   
-  h1 {
+  h1, h2 {
     text-align: center;
     color: #f39c12;
     margin-bottom: 20px;
-    font-size: 1.8rem;
   }
   
-  /* Input and buttons */
+  /* Input container */
   .input-container {
     text-align: center;
     margin-bottom: 20px;
@@ -23,24 +22,19 @@ body {
     gap: 5px;
   }
   
-  input {
+  input, select, button {
     padding: 10px;
-    width: 100%;
-    max-width: 300px;
+    font-size: 14px;
     border-radius: 5px;
     border: none;
-    font-size: 16px;
   }
   
+  /* Buttons */
   button {
-    padding: 10px 15px;
     background: #f39c12;
-    border: none;
-    border-radius: 5px;
     color: #000;
-    font-weight: bold;
     cursor: pointer;
-    font-size: 14px;
+    font-weight: bold;
     transition: 0.3s;
   }
   
@@ -48,56 +42,22 @@ body {
     background: #e67e22;
   }
   
-  .clear-btn {
-    margin-top: 10px;
-    background: #e74c3c;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
-  }
-  
-  .clear-btn:hover {
-    background: #c0392b;
-  }
-  
-  /* History list */
-  .history-container {
-    margin-top: 20px;
-    padding: 10px;
+  /* Stopwatch */
+  .stopwatch-container {
     background: #2c2c44;
+    padding: 15px;
     border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
   }
   
-  #historyList {
-    list-style: none;
-    padding: 0;
-    max-height: 400px;
-    overflow-y: auto;
+  #stopwatchDisplay {
+    font-size: 2rem;
+    margin-bottom: 10px;
   }
   
-  #historyList li {
-    background: #444;
-    margin: 5px 0;
-    padding: 8px 10px;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  
-  #historyList li button {
-    background: #e74c3c;
-    border: none;
-    border-radius: 5px;
-    padding: 3px 8px;
-    cursor: pointer;
-    color: #fff;
-    font-weight: bold;
+  .stopwatch-buttons button {
+    margin: 3px;
   }
   
   /* Table */
@@ -123,6 +83,7 @@ body {
     background: #333;
   }
   
+  /* Progress bar */
   .progress-bar {
     width: 100%;
     background: #444;
@@ -139,24 +100,18 @@ body {
     line-height: 22px;
     color: #000;
     font-weight: bold;
-    transition: width 0.5s ease;
     border-radius: 10px;
   }
   
-  /* Responsive adjustments */
-  @media (max-width: 600px) {
-    input, button {
-      width: 100%;
-      margin-top: 5px;
-    }
+  /* Ensure visibility when empty */
+  .progress-fill:empty {
+    content: "0%";
+  }
   
-    th, td {
-      font-size: 12px;
-      padding: 8px;
-    }
-  
-    .progress-fill {
-      font-size: 12px;
-    }
+  /* Responsive */
+  @media (max-width: 600px){
+    input, select, button { width: 100%; margin-top: 5px; }
+    th, td { font-size: 12px; padding: 8px; }
+    .progress-fill { font-size: 12px; }
   }
   
