@@ -56,7 +56,7 @@ function updateUI() {
 
   // Update total marks bottom bar
   const totalMarks = subjects.reduce((a,b)=>a+b.marks,0);
-  const maxMarks = 822;
+  const maxMarks = 900;
   const totalMarksEl = document.getElementById("totalMarksBottom");
   if(totalMarksEl) animateNumber(totalMarksEl, parseFloat(totalMarksEl.textContent)||0, totalMarks);
   const fill = document.getElementById("fullMarksFill");
