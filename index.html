@@ -15,21 +15,23 @@
   <button onclick="addSession()">Add Session</button>
   <button onclick="undo()">Undo</button>
   <button onclick="redo()">Redo</button>
-  <a href="history.html"><button>Go to History</button></a>
+  <a href="history.html"><button>History</button></a>
 </div>
 
-<table id="trackerTable">
-  <thead>
-    <tr>
-      <th>Subject</th>
-      <th>Marks</th>
-      <th>Level</th>
-      <th>EXP</th>
-      <th>Progress</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+<div class="table-container">
+  <table id="trackerTable">
+    <thead>
+      <tr>
+        <th>Subject</th>
+        <th>Marks</th>
+        <th>Level</th>
+        <th>EXP</th>
+        <th>Progress</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
 
 <audio id="levelUpSound" src="levelup.mp3"></audio>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
