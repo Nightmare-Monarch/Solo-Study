@@ -1,13 +1,13 @@
 let subjects = JSON.parse(localStorage.getItem("subjects")) || [
-  { name: "Sinhala", code: "sin", marks: 80, xp: 0, targetMarks: 95 },
-  { name: "Science", code: "sci", marks: 80, xp: 0, targetMarks: 90 },
-  { name: "Commerce", code: "com", marks: 94, xp: 0, targetMarks: 98 },
-  { name: "Buddhism", code: "bud", marks: 97, xp: 0, targetMarks: 100 },
-  { name: "History", code: "his", marks: 93, xp: 0, targetMarks: 98 },
-  { name: "Dancing", code: "dan", marks: 90, xp: 0, targetMarks: 95 },
-  { name: "Health", code: "hea", marks: 97, xp: 0, targetMarks: 100 },
-  { name: "Maths", code: "mat", marks: 98, xp: 0, targetMarks: 100 },
-  { name: "English", code: "eng", marks: 93, xp: 0, targetMarks: 97 }
+  { name: "Sinhala", code: "sin", marks: 69, xp: 0, targetMarks: 95 },
+  { name: "Science", code: "sci", marks: 68, xp: 0, targetMarks: 90 },
+  { name: "Commerce", code: "com", marks: 80, xp: 0, targetMarks: 98 },
+  { name: "Buddhism", code: "bud", marks: 95, xp: 0, targetMarks: 100 },
+  { name: "History", code: "his", marks: 86, xp: 0, targetMarks: 98 },
+  { name: "Dancing", code: "dan", marks: 73, xp: 0, targetMarks: 95 },
+  { name: "Health", code: "hea", marks: 90, xp: 0, targetMarks: 100 },
+  { name: "Maths", code: "mat", marks: 90, xp: 0, targetMarks: 100 },
+  { name: "English", code: "eng", marks: 82, xp: 0, targetMarks: 97 }
 ];
 
 // Save to localStorage
