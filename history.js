@@ -26,3 +26,4 @@ function clearHistory(){
 }
 
 window.onload = loadHistory;
+
