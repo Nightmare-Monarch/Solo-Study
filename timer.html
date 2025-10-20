@@ -4,19 +4,23 @@
   <meta charset="UTF-8">
   <title>Study Timer</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>⏱️ Study Timer</h1>
+  <div class="container">
+    <h1 class="title">⏱️ Study Timer</h1>
 
-  <div class="timer">
-    <input type="number" id="minutesInput" placeholder="Minutes" min="1">
-    <button onclick="startTimer()">Start</button>
+    <div class="timer-section">
+      <input type="number" id="minutesInput" placeholder="Minutes" min="1">
+      <button class="btn" onclick="startTimer()">Start</button>
+    </div>
+
+    <div id="countdown" class="countdown">00:00</div>
+
+    <audio id="alarmSound" src="sounds/punish.mp3"></audio>
+
+    <a href="index.html" class="menu-btn">🏠 Back</a>
   </div>
-
-  <div id="countdown">00:00</div>
-  <audio id="alarmSound" src="sounds/punish.mp3"></audio>
-
-  <a href="index.html" class="back">🏠 Back</a>
 
   <script>
     let timerInterval;
@@ -48,7 +52,7 @@
       let m = Math.floor(seconds / 60);
       let s = seconds % 60;
       document.getElementById("countdown").textContent =
-        `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
     }
   </script>
 </body>

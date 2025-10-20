@@ -4,24 +4,27 @@
   <meta charset="UTF-8">
   <title>Solo Study Tracker</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1 class="title">📘 Solo Study Tracker</h1>
-  
-  <div class="input-section">
-    <input id="sessionInput" placeholder="e.g. sin 1h pp q">
-    <button onclick="handleSessionInput()">Add Session</button>
+  <div class="container">
+    <h1 class="title">📘 Solo Study Tracker</h1>
+
+    <div class="input-section">
+      <input id="sessionInput" placeholder="e.g. sin 1h pp q">
+      <button class="btn" onclick="handleSessionInput()">Add Session</button>
+    </div>
+
+    <div id="subjectContainer" class="subjects"></div>
+
+    <div class="menu">
+      <a href="timer.html" class="menu-btn">⏱️ Timer</a>
+      <a href="history.html" class="menu-btn">📜 History</a>
+    </div>
+
+    <audio id="levelupSound" src="sounds/levelup.mp3"></audio>
+    <audio id="punishSound" src="sounds/punish.mp3"></audio>
   </div>
-
-  <div id="subjectContainer"></div>
-
-  <div class="menu">
-    <a href="timer.html">⏱️ Timer</a>
-    <a href="history.html">📜 History</a>
-  </div>
-
-  <audio id="levelupSound" src="sounds/levelup.mp3"></audio>
-  <audio id="punishSound" src="sounds/punish.mp3"></audio>
 
   <script src="script.js"></script>
 </body>

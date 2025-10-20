@@ -1,22 +1,176 @@
-body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  margin: 20px;
-  background: #f4f4f4;
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.title { font-size: 2rem; margin-bottom: 20px; }
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+}
 
-.input-section { margin-bottom: 20px; }
+.container {
+  width: 100%;
+  max-width: 700px;
+  background: rgba(0,0,0,0.6);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
 
-#sessionInput { padding: 10px; width: 200px; }
-button { padding: 8px 12px; margin-left: 5px; cursor: pointer; }
+.title {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 25px;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+}
 
-.subject { margin: 10px 0; padding: 10px; background: #fff; border-radius: 5px; }
-.progress { width: 100%; height: 10px; background: #ddd; border-radius: 5px; margin: 5px 0; }
-.progress-fill { height: 100%; background: #4caf50; border-radius: 5px; }
+.input-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+}
 
-.menu { margin-top: 20px; }
-.menu a { margin: 0 10px; text-decoration: none; color: #333; font-weight: bold; }
+#sessionInput {
+  flex: 1;
+  padding: 12px 15px;
+  border-radius: 10px 0 0 10px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+}
 
-.back { display: inline-block; margin-top: 20px; }
+.btn {
+  padding: 12px 20px;
+  border: none;
+  background: #ff7e5f;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 0 10px 10px 0;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: #feb47b;
+}
+
+.subjects .subject {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.subjects .subject strong {
+  font-size: 1.2rem;
+}
+
+.progress {
+  width: 100%;
+  height: 12px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 6px;
+  margin: 8px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff7e5f, #feb47b);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+
+.subject small {
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+.menu {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.menu-btn {
+  padding: 12px 25px;
+  margin: 0 10px;
+  border-radius: 15px;
+  background: #ff7e5f;
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.menu-btn:hover {
+  background: #feb47b;
+}
+/* History page */
+.history-list div {
+  background: rgba(255,255,255,0.1);
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.history-list button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  background: #ff7e5f;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.history-list button:hover {
+  background: #feb47b;
+}
+
+.history-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Timer page */
+.timer-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.timer-section input {
+  padding: 12px;
+  border-radius: 10px 0 0 10px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+}
+
+.countdown {
+  font-size: 2.5rem;
+  text-align: center;
+  margin: 20px 0;
+  color: #fff;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+}
