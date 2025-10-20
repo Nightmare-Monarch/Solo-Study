@@ -19,27 +19,26 @@ function saveData() {
   localStorage.setItem("redoHistory", JSON.stringify(redoHistory));
 }
 
+// Animate numbers smoothly
 function animateNumber(element, start, end, duration=800) {
   const range = end - start;
   let startTime = null;
-
   function step(time) {
-    if (!startTime) startTime = time;
+    if(!startTime) startTime = time;
     let progress = Math.min((time - startTime)/duration,1);
     element.textContent = (start + range*progress).toFixed(1);
-    if(progress < 1) requestAnimationFrame(step);
+    if(progress<1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
 }
 
+// Update UI
 function updateUI() {
   const container = document.getElementById("subjectContainer");
   container.innerHTML = "";
 
-  // Sort subjects descending by marks
-  subjects.sort((a,b)=>b.marks - a.marks);
+  subjects.sort((a,b)=>b.marks - a.marks); // Sort by marks
 
-  // Display subjects numbered
   subjects.forEach((s,index)=>{
     const xpPercent = (s.xp/50)*100;
     container.innerHTML += `
@@ -55,7 +54,7 @@ function updateUI() {
       </div>`;
   });
 
-  // Update bottom bar
+  // Update total marks bottom bar
   const totalMarks = subjects.reduce((a,b)=>a+b.marks,0);
   const maxMarks = 822;
   const totalMarksEl = document.getElementById("totalMarksBottom");
@@ -64,18 +63,19 @@ function updateUI() {
   if(fill) fill.style.width = (totalMarks/maxMarks*100).toFixed(1) + "%";
 }
 
+// Handle session input like "sci 1h 34m pp q 2h"
 function handleSessionInput() {
   const input = document.getElementById("sessionInput").value.trim().toLowerCase();
   if(!input) return;
 
   const parts = input.split(" ");
   const subjectCode = parts[0];
-  let totalHours = 0, totalMinutes = 0;
+  let totalMinutes = 0;
   let isPP = false, isQuiz = false;
 
   for(let i=1;i<parts.length;i++){
     let p = parts[i];
-    if(p.endsWith("h")) totalHours += parseInt(p)||0;
+    if(p.endsWith("h")) totalMinutes += (parseInt(p)||0)*60;
     else if(p.endsWith("m")) totalMinutes += parseInt(p)||0;
     else if(p === "pp") isPP = true;
     else if(p === "q") isQuiz = true;
@@ -84,33 +84,36 @@ function handleSessionInput() {
   sessionHistory.push(JSON.stringify(subjects));
   redoHistory = [];
 
-  addSession(subjectCode,totalHours,totalMinutes,isPP,isQuiz);
+  addSession(subjectCode,totalMinutes,isPP,isQuiz);
   document.getElementById("sessionInput").value="";
   saveData();
 }
 
-function addSession(subjectCode,hours,minutes,isPP,isQuiz){
+// Add session XP & marks
+function addSession(subjectCode,totalMinutes,isPP,isQuiz){
   const subject = subjects.find(s=>s.code===subjectCode);
   if(!subject) return alert("Invalid subject code");
 
-  let totalMinutes = hours*60 + minutes;
-  let xpGain = totalMinutes/6;
-  if(isPP) xpGain +=5;
-  if(isQuiz) xpGain +=3;
+  // XP calculation: 1 hour = 15 XP
+  let xpGain = (totalMinutes/60)*15;
+  if(isPP) xpGain += 5; // practice problems bonus
+  if(isQuiz) xpGain += 3; // quiz bonus
 
   subject.xp += xpGain;
 
-  while(subject.xp>=50){
-    subject.xp-=50;
-    const oldMarks = subject.marks;
-    subject.marks +=2.5;
-    if(subject.marks>100) subject.marks=100;
-    document.getElementById("levelupSound").play();
+  // Convert XP to marks: 50 XP → 50 marks
+  while(subject.xp >= 50){
+    subject.xp -= 50;
+    subject.marks += 50; // scale marks
   }
+
+  // Prevent marks exceeding 100
+  if(subject.marks>100) subject.marks=100;
 
   updateUI();
 }
 
+// Undo / Redo
 function undo(){
   if(sessionHistory.length===0) return alert("Nothing to undo");
   redoHistory.push(JSON.stringify(subjects));
@@ -127,6 +130,7 @@ function redo(){
   saveData();
 }
 
+// Reset all subjects
 function resetAll(){
   if(!confirm("Are you sure you want to reset all marks and XP?")) return;
   subjects.forEach(s=>{s.marks=0; s.xp=0;});
