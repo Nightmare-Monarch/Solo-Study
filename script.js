@@ -10,38 +10,61 @@ let subjects = JSON.parse(localStorage.getItem("subjects")) || [
   { name: "English", code: "eng", marks: 93, xp: 0 }
 ];
 
+// Undo/Redo history
+let sessionHistory = JSON.parse(localStorage.getItem("sessionHistory")) || [];
+let redoHistory = JSON.parse(localStorage.getItem("redoHistory")) || [];
+
 function saveData() {
   localStorage.setItem("subjects", JSON.stringify(subjects));
+  localStorage.setItem("sessionHistory", JSON.stringify(sessionHistory));
+  localStorage.setItem("redoHistory", JSON.stringify(redoHistory));
+}
+
+// Smooth number animation
+function animateNumber(element, start, end, duration=800) {
+  const range = end - start;
+  let startTime = null;
+
+  function step(time) {
+    if (!startTime) startTime = time;
+    let progress = Math.min((time - startTime)/duration,1);
+    element.textContent = (start + range*progress).toFixed(1);
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
 }
 
 function updateUI() {
   const container = document.getElementById("subjectContainer");
   container.innerHTML = "";
 
+  let totalMarks = subjects.reduce((a,b)=>a+b.marks,0);
+  const maxMarks = 822;
+
+  // Full marks progress bar
+  container.innerHTML += `
+    <div class="full-marks-container">
+      <strong id="totalMarks">Total Marks: ${totalMarks.toFixed(1)} / ${maxMarks}</strong>
+      <div class="progress full-marks">
+        <div class="progress-fill" style="width:${(totalMarks/maxMarks*100).toFixed(1)}%"></div>
+      </div>
+    </div>
+  `;
+
   subjects.forEach(s => {
     const xpPercent = (s.xp / 50) * 100;
-    const marksPercent = Math.min((s.marks / 100) * 100, 100);
-
     container.innerHTML += `
       <div class="subject">
-        <strong>${s.name}</strong> - Marks: ${s.marks.toFixed(1)}
-        
+        <strong>${s.name}</strong> - Marks: <span class="marks-value">${s.marks.toFixed(1)}</span>
         <div class="progress xp-bar">
           <div class="progress-fill" style="width:${xpPercent}%;"></div>
         </div>
         <small>XP: ${s.xp.toFixed(1)}/50</small>
-
         <div class="progress marks-bar">
-          <div class="progress-fill" style="width:${marksPercent}%;"></div>
+          <div class="progress-fill" style="width:${(s.marks/100*100).toFixed(1)}%"></div>
         </div>
       </div>`;
   });
-}
-
-function addHistory(text) {
-  let h = JSON.parse(localStorage.getItem("history")) || [];
-  h.push(`${new Date().toLocaleString()} - ${text}`);
-  localStorage.setItem("history", JSON.stringify(h));
 }
 
 function handleSessionInput() {
@@ -53,7 +76,6 @@ function handleSessionInput() {
   let totalHours = 0, totalMinutes = 0;
   let isPP = false, isQuiz = false;
 
-  // Sum all hours and minutes
   for (let i = 1; i < parts.length; i++) {
     let p = parts[i];
     if (p.endsWith("h")) totalHours += parseInt(p) || 0;
@@ -62,32 +84,54 @@ function handleSessionInput() {
     else if (p === "q") isQuiz = true;
   }
 
+  sessionHistory.push(JSON.stringify(subjects));
+  redoHistory = [];
+
   addSession(subjectCode, totalHours, totalMinutes, isPP, isQuiz);
   document.getElementById("sessionInput").value = "";
+  saveData();
 }
-
 
 function addSession(subjectCode, hours, minutes, isPP, isQuiz) {
   const subject = subjects.find(s => s.code === subjectCode);
   if (!subject) return alert("Invalid subject code");
 
-  let totalMinutes = (hours * 60) + minutes;
-  let xpGain = (totalMinutes / 6);
+  let totalMinutes = (hours*60)+minutes;
+  let xpGain = totalMinutes/6;
   if (isPP) xpGain += 5;
   if (isQuiz) xpGain += 3;
 
   subject.xp += xpGain;
 
-  while (subject.xp >= 50) {
+  while(subject.xp >=50){
     subject.xp -= 50;
+    const oldMarks = subject.marks;
     subject.marks += 2.5;
-    if (subject.marks > 100) subject.marks = 100;
+    if(subject.marks>100) subject.marks=100;
     document.getElementById("levelupSound").play();
+    updateUI();
+    // Animate marks number
+    const marksSpan = document.querySelector(`.subject strong:contains("${subject.name}")`).parentElement.querySelector(".marks-value");
+    animateNumber(marksSpan, oldMarks, subject.marks);
   }
 
-  saveData();
   updateUI();
-  addHistory(`${subject.name}: +${xpGain.toFixed(1)} XP, Marks now: ${subject.marks.toFixed(1)}`);
+}
+
+function undo() {
+  if(sessionHistory.length===0) return alert("Nothing to undo");
+  redoHistory.push(JSON.stringify(subjects));
+  subjects = JSON.parse(sessionHistory.pop());
+  updateUI();
+  saveData();
+}
+
+function redo() {
+  if(redoHistory.length===0) return alert("Nothing to redo");
+  sessionHistory.push(JSON.stringify(subjects));
+  subjects = JSON.parse(redoHistory.pop());
+  updateUI();
+  saveData();
 }
 
 window.onload = updateUI;

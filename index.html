@@ -11,8 +11,13 @@
     <h1 class="title">🗡️ Solo Study Tracker</h1>
 
     <div class="input-section">
-      <input id="sessionInput" placeholder="e.g. sin 1h pp q">
+      <input id="sessionInput" placeholder="e.g. sin 5h 6h pp q">
       <button class="btn" onclick="handleSessionInput()">Add Session</button>
+    </div>
+
+    <div class="undo-redo">
+      <button class="btn" onclick="undo()">Undo</button>
+      <button class="btn" onclick="redo()">Redo</button>
     </div>
 
     <div id="subjectContainer" class="subjects"></div>
