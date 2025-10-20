@@ -13,9 +13,6 @@ let subjects = JSON.parse(localStorage.getItem("subjects")) || [
   let sessionHistory = JSON.parse(localStorage.getItem("sessionHistory")) || [];
   let redoHistory = JSON.parse(localStorage.getItem("redoHistory")) || [];
   
-  
-  
-  
   function saveData() {
     localStorage.setItem("subjects", JSON.stringify(subjects));
     localStorage.setItem("sessionHistory", JSON.stringify(sessionHistory));
@@ -90,8 +87,6 @@ let subjects = JSON.parse(localStorage.getItem("subjects")) || [
     addSession(subjectCode,totalMinutes,isPP,isQuiz);
     document.getElementById("sessionInput").value="";
     saveData();
-  
-  
   }
   
   // Add session XP & marks
@@ -116,17 +111,11 @@ let subjects = JSON.parse(localStorage.getItem("subjects")) || [
     // Prevent marks exceeding 100
     if(subject.marks > 100) subject.marks = 100;
   
-  
     // Prevent XP exceeding 100
     if(subject.xp > 100) subject.xp = 100;
   
-  
-  
-  
     updateUI();
   }
-  
-  
   
   // Undo / Redo
   function undo(){
@@ -154,7 +143,6 @@ let subjects = JSON.parse(localStorage.getItem("subjects")) || [
     localStorage.removeItem("history");
     saveData();
     updateUI();
-  
   }
   
   window.onload = updateUI;
