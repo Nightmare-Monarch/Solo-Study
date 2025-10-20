@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Study Timer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>⏱️ Study Timer</h1>
+
+  <div class="timer">
+    <input type="number" id="minutesInput" placeholder="Minutes" min="1">
+    <button onclick="startTimer()">Start</button>
+  </div>
+
+  <div id="countdown">00:00</div>
+  <audio id="alarmSound" src="sounds/punish.mp3"></audio>
+
+  <a href="index.html" class="back">🏠 Back</a>
+
+  <script>
+    let timerInterval;
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      let minutes = parseInt(document.getElementById("minutesInput").value);
+      if (isNaN(minutes) || minutes <= 0) {
+        alert("Enter a valid number of minutes");
+        return;
+      }
+
+      let time = minutes * 60;
+      updateDisplay(time);
+
+      timerInterval = setInterval(() => {
+        time--;
+        updateDisplay(time);
+
+        if (time <= 0) {
+          clearInterval(timerInterval);
+          document.getElementById("alarmSound").play();
+          alert("Time's up!");
+        }
+      }, 1000);
+    }
+
+    function updateDisplay(seconds) {
+      let m = Math.floor(seconds / 60);
+      let s = seconds % 60;
+      document.getElementById("countdown").textContent =
+        `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+  </script>
+</body>
+</html>
