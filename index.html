@@ -1,66 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Solo-Leveling Study Tracker</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Solo Study Tracker</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<h1>Solo-Leveling Study Tracker</h1>
-
-<div class="input-container">
-  <input type="text" id="logInput" placeholder='e.g., "sin 2h 30m pp q"'>
-  <button onclick="addSession()">Add Session</button>
-  <button onclick="undo()">Undo</button>
-  <button onclick="redo()">Redo</button>
-  <a href="history.html"><button>History</button></a>
-</div>
-
-<!-- Stopwatch Section -->
-<div class="stopwatch-container">
-  <h2>Stopwatch</h2>
-  <div id="stopwatchDisplay">00:00:00</div>
-  <select id="subjectSelect">
-    <option value="sin">Sinhala</option>
-    <option value="sci">Science</option>
-    <option value="com">Commerce</option>
-    <option value="bud">Buddhism</option>
-    <option value="his">History</option>
-    <option value="dan">Dancing</option>
-    <option value="hea">Health</option>
-    <option value="mat">Maths</option>
-    <option value="eng">English</option>
-  </select>
-  <div class="stopwatch-buttons">
-    <button onclick="startStopwatch()">Start</button>
-    <button onclick="stopStopwatch()">Stop</button>
-    <button onclick="submitStopwatch()">Submit</button>
-    <button onclick="resumeStopwatch()">Resume</button>
+  <h1 class="title">📘 Solo Study Tracker</h1>
+  
+  <div class="input-section">
+    <input id="sessionInput" placeholder="e.g. sin 1h pp q">
+    <button onclick="handleSessionInput()">Add Session</button>
   </div>
-</div>
 
-<div class="table-container">
-  <table id="trackerTable">
-    <thead>
-      <tr>
-        <th>Subject</th>
-        <th>Marks</th>
-        <th>Level</th>
-        <th>EXP</th>
-        <th>Progress</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</div>
+  <div id="subjectContainer"></div>
 
-<!-- Audio -->
-<audio id="bgMusic" src="background.mp3" loop></audio>
-<audio id="levelUpSound" src="levelup.mp3"></audio>
+  <div class="menu">
+    <a href="timer.html">⏱️ Timer</a>
+    <a href="history.html">📜 History</a>
+  </div>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-<script src="script.js"></script>
+  <audio id="levelupSound" src="sounds/levelup.mp3"></audio>
+  <audio id="punishSound" src="sounds/punish.mp3"></audio>
+
+  <script src="script.js"></script>
 </body>
 </html>
