@@ -1,71 +1,78 @@
 let subjects = JSON.parse(localStorage.getItem("subjects")) || [
-  { name: "Sinhala", code: "sin", marks: 69, xp: 0, targetMarks: 95 },
-  { name: "Science", code: "sci", marks: 68, xp: 0, targetMarks: 90 },
-  { name: "Commerce", code: "com", marks: 80, xp: 0, targetMarks: 98 },
-  { name: "Buddhism", code: "bud", marks: 95, xp: 0, targetMarks: 100 },
-  { name: "History", code: "his", marks: 86, xp: 0, targetMarks: 98 },
-  { name: "Dancing", code: "dan", marks: 73, xp: 0, targetMarks: 95 },
-  { name: "Health", code: "hea", marks: 90, xp: 0, targetMarks: 100 },
-  { name: "Maths", code: "mat", marks: 90, xp: 0, targetMarks: 100 },
-  { name: "English", code: "eng", marks: 82, xp: 0, targetMarks: 97 }
+  { name: "Sinhala", code: "sin", marks: 80, xp: 0 },
+  { name: "Science", code: "sci", marks: 80, xp: 0 },
+  { name: "Commerce", code: "com", marks: 94, xp: 0 },
+  { name: "Buddhism", code: "bud", marks: 97, xp: 0 },
+  { name: "History", code: "his", marks: 93, xp: 0 },
+  { name: "Dancing", code: "dan", marks: 90, xp: 0 },
+  { name: "Health", code: "hea", marks: 97, xp: 0 },
+  { name: "Maths", code: "mat", marks: 98, xp: 0 },
+  { name: "English", code: "eng", marks: 93, xp: 0 }
 ];
 
-// Save to localStorage
 function saveData() {
   localStorage.setItem("subjects", JSON.stringify(subjects));
 }
 
-// Update UI: show target marks instead of current marks
 function updateUI() {
   const container = document.getElementById("subjectContainer");
   container.innerHTML = "";
+
   subjects.forEach(s => {
     const xpPercent = (s.xp / 50) * 100;
+    const marksPercent = Math.min((s.marks / 100) * 100, 100);
+
     container.innerHTML += `
       <div class="subject">
-        <strong>${s.name}</strong> - Target: ${s.targetMarks} Marks
-        <div class="progress">
+        <strong>${s.name}</strong> - Marks: ${s.marks.toFixed(1)}
+        
+        <div class="progress xp-bar">
           <div class="progress-fill" style="width:${xpPercent}%;"></div>
         </div>
-        <small>${s.xp.toFixed(1)}/50 XP</small>
+        <small>XP: ${s.xp.toFixed(1)}/50</small>
+
+        <div class="progress marks-bar">
+          <div class="progress-fill" style="width:${marksPercent}%;"></div>
+        </div>
       </div>`;
   });
 }
 
-// Add history log
 function addHistory(text) {
   let h = JSON.parse(localStorage.getItem("history")) || [];
   h.push(`${new Date().toLocaleString()} - ${text}`);
   localStorage.setItem("history", JSON.stringify(h));
 }
 
-// Handle session input
 function handleSessionInput() {
   const input = document.getElementById("sessionInput").value.trim().toLowerCase();
   if (!input) return;
 
   const parts = input.split(" ");
   const subjectCode = parts[0];
-  let hours = 0, minutes = 0, isPP = false, isQuiz = false;
+  let totalHours = 0, totalMinutes = 0;
+  let isPP = false, isQuiz = false;
 
-  parts.forEach(p => {
-    if (p.endsWith("h")) hours = parseInt(p);
-    else if (p.endsWith("m")) minutes = parseInt(p);
+  // Sum all hours and minutes
+  for (let i = 1; i < parts.length; i++) {
+    let p = parts[i];
+    if (p.endsWith("h")) totalHours += parseInt(p) || 0;
+    else if (p.endsWith("m")) totalMinutes += parseInt(p) || 0;
     else if (p === "pp") isPP = true;
     else if (p === "q") isQuiz = true;
-  });
+  }
 
-  addSession(subjectCode, hours, minutes, isPP, isQuiz);
+  addSession(subjectCode, totalHours, totalMinutes, isPP, isQuiz);
   document.getElementById("sessionInput").value = "";
 }
 
-// Add XP session
+
 function addSession(subjectCode, hours, minutes, isPP, isQuiz) {
   const subject = subjects.find(s => s.code === subjectCode);
   if (!subject) return alert("Invalid subject code");
 
   let totalMinutes = (hours * 60) + minutes;
-  let xpGain = (totalMinutes / 6); // 10 XP per 1h
+  let xpGain = (totalMinutes / 6);
   if (isPP) xpGain += 5;
   if (isQuiz) xpGain += 3;
 
@@ -73,14 +80,14 @@ function addSession(subjectCode, hours, minutes, isPP, isQuiz) {
 
   while (subject.xp >= 50) {
     subject.xp -= 50;
-    subject.marks += 2.5; // you can keep marks increasing internally if needed
+    subject.marks += 2.5;
+    if (subject.marks > 100) subject.marks = 100;
     document.getElementById("levelupSound").play();
   }
 
   saveData();
   updateUI();
-  addHistory(`${subject.name}: +${xpGain.toFixed(1)} XP`);
+  addHistory(`${subject.name}: +${xpGain.toFixed(1)} XP, Marks now: ${subject.marks.toFixed(1)}`);
 }
 
-// On load
 window.onload = updateUI;
