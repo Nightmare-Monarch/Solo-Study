@@ -13,42 +13,72 @@ let subjects = {
   const expPerLevel = 100;
   const marksPerLevel = 5;
   
-  // Load progress from localStorage
+  let undoStack = [];
+  let redoStack = [];
+  
+  // Load progress
   if(localStorage.getItem("studyData")){
     subjects = JSON.parse(localStorage.getItem("studyData"));
   }
   
+  function saveState() {
+    undoStack.push(JSON.stringify(subjects));
+    if(undoStack.length > 50) undoStack.shift();
+    localStorage.setItem("studyData", JSON.stringify(subjects));
+  }
+  
   function addSession() {
     const input = document.getElementById("logInput").value.trim().toLowerCase();
-    const parts = input.split(" ");
-    if(parts.length < 2) { alert("Invalid format"); return; }
+    if(!input) return;
+    saveState(); // Save current state for undo
+    redoStack = []; // Clear redo stack when new action happens
   
+    const parts = input.split(" ");
     const code = parts[0];
-    const type = parts[1];
+    if(!subjects[code]) { alert("Unknown subject code"); return; }
   
     let expGain = 0;
-    if(type === "0.5") expGain = 5;
-    else if(type === "1") expGain = 10;
-    else if(type === "2") expGain = 20;
-    else if(type === "pp") expGain = 20;
-    else if(type === "q") expGain = 25;
-    else if(type.includes("pp")) expGain = 20;
-    else { alert("Unknown type"); return; }
-  
-    if(subjects[code]){
-      subjects[code].exp += expGain;
-      while(subjects[code].exp >= expPerLevel){
-        subjects[code].exp -= expPerLevel;
-        subjects[code].level += 1;
-        subjects[code].marks += marksPerLevel;
-      }
-      updateTable();
-      saveProgress();
-    } else {
-      alert("Unknown subject code");
+    for(let i=1;i<parts.length;i++){
+      const t = parts[i];
+      if(t === "0.5") expGain += 5;
+      else if(t === "1") expGain += 10;
+      else if(t === "2") expGain += 20;
+      else if(t === "pp") expGain += 20;
+      else if(t === "q") expGain += 25;
+      else if(t.includes("pp")) expGain += 20;
+      else if(!isNaN(parseFloat(t))) expGain += parseFloat(t)*10;
+      else { alert("Unknown type: "+t); }
     }
   
+    subjects[code].exp += expGain;
+    while(subjects[code].exp >= expPerLevel){
+      subjects[code].exp -= expPerLevel;
+      subjects[code].level += 1;
+      subjects[code].marks += marksPerLevel;
+      if(subjects[code].marks > 150) subjects[code].marks = 150; // max cap
+      // Optional: play sound or confetti here
+    }
+    updateTable();
     document.getElementById("logInput").value = "";
+    localStorage.setItem("studyData", JSON.stringify(subjects));
+  }
+  
+  function undo(){
+    if(undoStack.length === 0) return;
+    redoStack.push(JSON.stringify(subjects));
+    const last = undoStack.pop();
+    subjects = JSON.parse(last);
+    updateTable();
+    localStorage.setItem("studyData", JSON.stringify(subjects));
+  }
+  
+  function redo(){
+    if(redoStack.length === 0) return;
+    undoStack.push(JSON.stringify(subjects));
+    const next = redoStack.pop();
+    subjects = JSON.parse(next);
+    updateTable();
+    localStorage.setItem("studyData", JSON.stringify(subjects));
   }
   
   function updateTable(){
@@ -72,10 +102,5 @@ let subjects = {
     }
   }
   
-  function saveProgress(){
-    localStorage.setItem("studyData", JSON.stringify(subjects));
-  }
-  
-  // Initialize table
   updateTable();
   
