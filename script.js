@@ -30,19 +30,29 @@ let subjects = {
   }
   
   function addSession(){
-    const input=document.getElementById("logInput").value.trim().toLowerCase();
+    const input = document.getElementById("logInput").value.trim().toLowerCase();
     if(!input) return;
   
-    saveState();
-    redoStack=[];
+    saveState(); // Save undo state
+    redoStack = [];
   
+    // Save to history
     sessionHistory.push(input);
     localStorage.setItem("sessionHistory", JSON.stringify(sessionHistory));
   
+    // Update XP / EXP
     processSession(input);
-    document.getElementById("logInput").value="";
+  
+    // Save subjects to LocalStorage
+    localStorage.setItem("studyData", JSON.stringify(subjects));
+  
+    // Refresh table
     updateTable();
+  
+    // Clear input
+    document.getElementById("logInput").value = "";
   }
+  
   
   function processSession(input){
     const parts=input.split(" ");
