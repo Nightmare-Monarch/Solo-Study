@@ -40,23 +40,23 @@ function updateUI() {
   subjects.sort((a,b)=>b.marks - a.marks); // Sort by marks
 
   subjects.forEach((s,index)=>{
-    const xpPercent = (s.xp/50)*100;
+    const xpPercent = (s.xp/100)*100; // XP bar max 100
     container.innerHTML += `
       <div class="subject">
         <strong>${index+1}. ${s.name}</strong> - Marks: <span class="marks-value">${s.marks.toFixed(1)}</span>
         <div class="progress xp-bar">
           <div class="progress-fill" style="width:${xpPercent}%;"></div>
         </div>
-        <small>XP: ${s.xp.toFixed(1)}/50</small>
+        <small>XP: ${s.xp.toFixed(1)}/100</small>
         <div class="progress marks-bar">
-          <div class="progress-fill" style="width:${(s.marks/100*100).toFixed(1)}%"></div>
+          <div class="progress-fill" style="width:${s.marks.toFixed(1)}%"></div>
         </div>
       </div>`;
   });
 
   // Update total marks bottom bar
   const totalMarks = subjects.reduce((a,b)=>a+b.marks,0);
-  const maxMarks = 900;
+  const maxMarks = 900; // 9 subjects * 100
   const totalMarksEl = document.getElementById("totalMarksBottom");
   if(totalMarksEl) animateNumber(totalMarksEl, parseFloat(totalMarksEl.textContent)||0, totalMarks);
   const fill = document.getElementById("fullMarksFill");
@@ -94,19 +94,25 @@ function addSession(subjectCode,totalMinutes,isPP,isQuiz){
   const subject = subjects.find(s => s.code === subjectCode);
   if(!subject) return alert("Invalid subject code");
 
-  // XP calculation: 1 hour = 15 XP
-  let xpGain = (totalMinutes / 60) * 15;
+  // XP calculation: 10 hours = 100 XP → 1 hour = 10 XP → 1 min = 0.1667 XP
+  let xpGain = totalMinutes * (100 / 600); 
   if(isPP) xpGain += 5; // practice problems bonus
   if(isQuiz) xpGain += 3; // quiz bonus
 
   subject.xp += xpGain;
 
-  // Convert XP to marks: 50 XP → 50 marks proportionally
-  let marksGain = (xpGain / 50) * 50; // 50 XP = 50 marks
+  // Marks calculation: 10 hours = 100 marks → 1 min = 0.1667 marks
+  let marksGain = totalMinutes * (100 / 600);
+  if(isPP) marksGain += 5;
+  if(isQuiz) marksGain += 3;
+
   subject.marks += marksGain;
 
   // Prevent marks exceeding 100
   if(subject.marks > 100) subject.marks = 100;
+
+  // Prevent XP exceeding 100
+  if(subject.xp > 100) subject.xp = 100;
 
   updateUI();
 }
