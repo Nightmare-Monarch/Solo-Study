@@ -4,26 +4,51 @@
   <meta charset="UTF-8">
   <title>Stopwatch</title>
   <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
   <div class="container">
     <h1 class="title">⏱️ Stopwatch</h1>
 
-    <div class="stopwatch-section">
-      <div id="stopwatchDisplay">00:00:00</div>
-      <div class="stopwatch-buttons">
-        <button class="btn" onclick="startStopwatch()">Start</button>
-        <button class="btn" onclick="pauseStopwatch()">Pause</button>
-        <button class="btn" onclick="resetStopwatch()">Reset</button>
-        <button class="btn" onclick="submitStopwatch()">Submit Session</button>
-      </div>
-      <input id="stopwatchSubject" placeholder="Subject code (e.g. sin)">
-      <label><input type="checkbox" id="ppCheck"> PP</label>
-      <label><input type="checkbox" id="qCheck"> Quiz</label>
+    <div class="timer-section">
+      <div id="stopwatchDisplay" class="countdown">00:00:00</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <button class="btn" onclick="startStopwatch()">Start</button>
+      <button class="btn" onclick="pauseStopwatch()">Pause</button>
+      <button class="btn" onclick="resetStopwatch()">Reset</button>
     </div>
+
+
+    <input id="stopwatchSessionInput" placeholder="Subject Code e.g. sin">
+    <button class="btn" onclick="submitStopwatch()">Submit</button>
 
     <a href="index.html" class="menu-btn">🏠 Back</a>
   </div>
+
 
   <script src="stopwatch.js"></script>
 </body>
