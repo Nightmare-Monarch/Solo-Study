@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>⏱️ Study Stopwatch</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">⏱️ Study Stopwatch</h1>
+
+    <div class="timer-section">
+      <select id="subjectSelect">
+        <option value="">Select Subject</option>
+        <option value="sin">Sinhala</option>
+        <option value="sci">Science</option>
+        <option value="com">Commerce</option>
+        <option value="bud">Buddhism</option>
+        <option value="his">History</option>
+        <option value="dan">Dancing</option>
+        <option value="hea">Health</option>
+        <option value="mat">Maths</option>
+        <option value="eng">English</option>
+      </select>
+
+      <div id="stopwatchDisplay" class="countdown">00:00:00</div>
+
+      <div class="buttons">
+        <button class="btn" onclick="startStopwatch()">Start</button>
+        <button class="btn" onclick="pauseStopwatch()">Pause</button>
+        <button class="btn" onclick="resetStopwatch()">Reset</button>
+        <button class="btn" onclick="submitStopwatch()">Submit</button>
+      </div>
+    </div>
+
+    <a href="index.html" class="menu-btn">🏠 Back</a>
+  </div>
+
+  <audio id="submitSound" src="sounds/levelup.mp3"></audio>
+
+  <script src="script.js"></script>
+  <script>
+    let stopwatchInterval;
+    let elapsedSeconds = 0;
+    let running = false;
+
+    function updateDisplay(){
+      const hrs = Math.floor(elapsedSeconds / 3600).toString().padStart(2,'0');
+      const mins = Math.floor((elapsedSeconds % 3600) / 60).toString().padStart(2,'0');
+      const secs = (elapsedSeconds % 60).toString().padStart(2,'0');
+      document.getElementById("stopwatchDisplay").textContent = `${hrs}:${mins}:${secs}`;
+    }
+
+    function startStopwatch(){
+      if(running) return;
+      running = true;
+      stopwatchInterval = setInterval(()=>{
+        elapsedSeconds++;
+        updateDisplay();
+      },1000);
+    }
+
+    function pauseStopwatch(){
+      running = false;
+      clearInterval(stopwatchInterval);
+    }
+
+    function resetStopwatch(){
+      running = false;
+      clearInterval(stopwatchInterval);
+      elapsedSeconds = 0;
+      updateDisplay();
+    }
+
+    function submitStopwatch(){
+      if(elapsedSeconds === 0) return alert("You haven't studied yet!");
+      const subjectCode = document.getElementById("subjectSelect").value;
+      if(!subjectCode) return alert("Please select a subject first!");
+
+      const totalMinutes = Math.floor(elapsedSeconds / 60);
+      if(totalMinutes === 0) return alert("Study at least 1 minute!");
+
+      // Add XP & marks using existing system
+      addSession(subjectCode, totalMinutes, false, false);
+
+      // Reset stopwatch
+      resetStopwatch();
+
+      document.getElementById("submitSound").play();
+      alert("Session submitted successfully!");
+    }
+
+    updateDisplay();
+  </script>
+</body>
+</html>

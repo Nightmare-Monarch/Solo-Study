@@ -90,32 +90,37 @@ function handleSessionInput() {
 }
 
 // Add session XP & marks
-function addSession(subjectCode,totalMinutes,isPP,isQuiz){
+// Add session XP & marks
+function addSession(subjectCode, totalMinutes, isPP, isQuiz){
   const subject = subjects.find(s => s.code === subjectCode);
   if(!subject) return alert("Invalid subject code");
 
-  // XP calculation: 10 hours = 100 XP → 1 hour = 10 XP → 1 min = 0.1667 XP
-  let xpGain = totalMinutes * (100 / 600); 
-  if(isPP) xpGain += 5; // practice problems bonus
-  if(isQuiz) xpGain += 3; // quiz bonus
+  // 15 hours = 100 marks → 900 minutes = 100 marks → 1 minute = 0.1111 marks
+  // So XP will also scale equally (15 hours = 100 XP)
+  let xpGain = totalMinutes * (100 / 900); 
+  let marksGain = totalMinutes * (100 / 900);
 
+  // Bonuses
+  if(isPP){
+    xpGain += 5;
+    marksGain += 5;
+  }
+  if(isQuiz){
+    xpGain += 3;
+    marksGain += 3;
+  }
+
+  // Update subject values
   subject.xp += xpGain;
-
-  // Marks calculation: 10 hours = 100 marks → 1 min = 0.1667 marks
-  let marksGain = totalMinutes * (100 / 600);
-  if(isPP) marksGain += 5;
-  if(isQuiz) marksGain += 3;
-
   subject.marks += marksGain;
 
-  // Prevent marks exceeding 100
+  // Prevent values exceeding 100
   if(subject.marks > 100) subject.marks = 100;
-
-  // Prevent XP exceeding 100
   if(subject.xp > 100) subject.xp = 100;
 
   updateUI();
 }
+
 
 // Undo / Redo
 function undo(){
@@ -146,3 +151,26 @@ function resetAll(){
 }
 
 window.onload = updateUI;
+
+// ----------- DAILY PROGRESS TRACKER -----------
+function updateDailyProgress(totalMinutes){
+  const today = new Date().toLocaleDateString();
+  let progressData = JSON.parse(localStorage.getItem("progressData")) || [];
+
+  // Check if today already exists
+  let todayEntry = progressData.find(p => p.date === today);
+  if(todayEntry){
+    todayEntry.minutes += totalMinutes;
+  } else {
+    progressData.push({ date: today, minutes: totalMinutes });
+  }
+
+  localStorage.setItem("progressData", JSON.stringify(progressData));
+}
+
+// Modify addSession to record progress
+const oldAddSession = addSession;
+addSession = function(subjectCode, totalMinutes, isPP, isQuiz){
+  oldAddSession(subjectCode, totalMinutes, isPP, isQuiz);
+  updateDailyProgress(totalMinutes);
+};
