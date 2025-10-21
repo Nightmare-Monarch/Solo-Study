@@ -1,27 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Stopwatch</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Stopwatch Study Tracker</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="container">
-    <h1 class="title">⏱️ Stopwatch</h1>
 
-    <div class="timer-section">
-      <div id="stopwatchDisplay" class="countdown">00:00:00</div>
+<div class="top-menu">
+  <a href="index.html">Dashboard</a>
+  <a href="history.html">History</a>
+  <a href="progress.html">Progress</a>
+</div>
+
+<div class="container">
+  <h1 class="title">⏱️ Stopwatch</h1>
+
+  <div class="input-section">
+    <select id="subjectSelect">
+      <option value="" disabled selected>Select Subject</option>
+      <option value="sin">Sinhala</option>
+      <option value="sci">Science</option>
+      <option value="com">Commerce</option>
+      <option value="bud">Buddhism</option>
+      <option value="his">History</option>
+      <option value="dan">Dancing</option>
+      <option value="hea">Health</option>
+      <option value="mat">Maths</option>
+      <option value="eng">English</option>
+    </select>
+  </div>
+
+  <div class="timer-display">
+    <h2 id="stopwatch">00:00:00</h2>
+    <div class="stopwatch-buttons">
       <button class="btn" onclick="startStopwatch()">Start</button>
       <button class="btn" onclick="pauseStopwatch()">Pause</button>
       <button class="btn" onclick="resetStopwatch()">Reset</button>
     </div>
-
-    <input id="stopwatchSessionInput" placeholder="Subject Code e.g. sin">
-    <button class="btn" onclick="submitStopwatch()">Submit</button>
-
-    <a href="index.html" class="menu-btn">🏠 Back</a>
   </div>
 
-  <script src="stopwatch.js"></script>
+  <div class="input-section">
+    <button class="btn" onclick="submitStopwatch()">Submit Session</button>
+  </div>
+</div>
+
+<script src="stopwatch.js"></script>
 </body>
 </html>
