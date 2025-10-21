@@ -12,14 +12,16 @@ let subjects = JSON.parse(localStorage.getItem("subjects")) || [
 
 let sessionHistory = JSON.parse(localStorage.getItem("sessionHistory")) || [];
 let redoHistory = JSON.parse(localStorage.getItem("redoHistory")) || [];
+let dailyLog = JSON.parse(localStorage.getItem("dailyLog")) || {}; // key=date, value=minutes
 
 function saveData() {
   localStorage.setItem("subjects", JSON.stringify(subjects));
   localStorage.setItem("sessionHistory", JSON.stringify(sessionHistory));
   localStorage.setItem("redoHistory", JSON.stringify(redoHistory));
+  localStorage.setItem("dailyLog", JSON.stringify(dailyLog));
 }
 
-// Animate number
+// Animate numbers
 function animateNumber(el, start, end, duration=800){
   const range=end-start;
   let startTime=null;
@@ -63,7 +65,10 @@ function updateUI(){
   const totalXPEl=document.getElementById("totalXPBottom");
   if(totalXPEl) animateNumber(totalXPEl,parseFloat(totalXPEl.textContent)||0,totalXP);
   const xpFill=document.getElementById("fullXPFill");
-  if(xpFill) xpFill.style.width=(totalXP/900*100).toFixed(1)+"%"; // 900 max XP
+  if(xpFill) xpFill.style.width=(totalXP/900*100).toFixed(1)+"%"; 
+
+  updateAchievements(totalXP);
+  updateCharts();
 }
 
 // Handle session input
@@ -84,6 +89,10 @@ function handleSessionInput(){
   sessionHistory.push(JSON.stringify(subjects));
   redoHistory=[];
   addSession(code,totalMinutes,pp,quiz);
+
+  // Log daily minutes
+  const today=new Date().toISOString().split("T")[0];
+  dailyLog[today]=(dailyLog[today]||0)+totalMinutes;
   document.getElementById("sessionInput").value="";
   saveData();
 }
@@ -107,40 +116,78 @@ function addSession(code,totalMinutes,pp,quiz){
   updateUI();
 }
 
-// Undo / Redo
-function undo(){
-  if(sessionHistory.length===0) return alert("Nothing to undo");
-  redoHistory.push(JSON.stringify(subjects));
-  subjects=JSON.parse(sessionHistory.pop());
-  updateUI(); saveData();
-}
-function redo(){
-  if(redoHistory.length===0) return alert("Nothing to redo");
-  sessionHistory.push(JSON.stringify(subjects));
-  subjects=JSON.parse(redoHistory.pop());
-  updateUI(); saveData();
-}
-
-// Reset all
-function resetAll(){
-  if(!confirm("Reset all marks and XP?")) return;
-  subjects.forEach(s=>{s.marks=0; s.xp=0;});
-  sessionHistory=[]; redoHistory=[];
-  saveData();
-  updateUI();
-}
+// Undo / Redo / Reset
+function undo(){ if(sessionHistory.length===0) return alert("Nothing to undo"); redoHistory.push(JSON.stringify(subjects)); subjects=JSON.parse(sessionHistory.pop()); updateUI(); saveData(); }
+function redo(){ if(redoHistory.length===0) return alert("Nothing to redo"); sessionHistory.push(JSON.stringify(subjects)); subjects=JSON.parse(redoHistory.pop()); updateUI(); saveData(); }
+function resetAll(){ if(!confirm("Reset all marks and XP?")) return; subjects.forEach(s=>{s.marks=0; s.xp=0;}); sessionHistory=[]; redoHistory=[]; dailyLog={}; saveData(); updateUI(); }
 
 // Motivation quote
-const quotes=[
-  "Every day is a new chance to improve!",
-  "Small steps lead to big progress!",
-  "Stay consistent, stay strong!",
-  "Knowledge is power, keep studying!",
-  "Focus today, succeed tomorrow!"
+const quotes=["Every day is a new chance to improve!","Small steps lead to big progress!","Stay consistent, stay strong!","Knowledge is power, keep studying!","Focus today, succeed tomorrow!"];
+function showMotivation(){ const el=document.getElementById("motivation"); if(el) el.textContent=quotes[Math.floor(Math.random()*quotes.length)]; }
+
+// Achievement badges
+const achievements=[
+  {id:"1h", text:"1 Hour Total", condition:()=>totalHours()>=60},
+  {id:"5h", text:"5 Hour Total", condition:()=>totalHours()>=300},
+  {id:"15h", text:"15 Hour Total", condition:()=>totalHours()>=900},
+  {id:"30h", text:"30 Hour Total", condition:()=>totalHours()>=1800},
+  {id:"60h", text:"60 Hour Total", condition:()=>totalHours()>=3600},
+  {id:"100h", text:"100 Hour Total", condition:()=>totalHours()>=6000},
+  {id:"7d", text:"7 Days Streak", condition:()=>currentStreak()>=7},
+  {id:"14d", text:"14 Days Streak", condition:()=>currentStreak()>=14},
+  {id:"21d", text:"21 Days Streak", condition:()=>currentStreak()>=21},
+  {id:"30d", text:"30 Days Streak", condition:()=>currentStreak()>=30},
+  {id:"500xp", text:"Earn 500 XP", condition:()=>totalXP()>=500},
+  {id:"1000xp", text:"Earn 1000 XP", condition:()=>totalXP()>=1000}
 ];
-function showMotivation(){
-  const el=document.getElementById("motivation");
-  if(el) el.textContent=quotes[Math.floor(Math.random()*quotes.length)];
+
+function totalHours(){ return Object.values(dailyLog).reduce((a,b)=>a+b,0);}
+function totalXP(){ return subjects.reduce((a,b)=>a+b.xp,0);}
+function currentStreak(){ 
+  const dates=Object.keys(dailyLog).sort(); 
+  if(dates.length===0) return 0;
+  let streak=1;
+  for(let i=dates.length-1;i>0;i--){
+    const d1=new Date(dates[i]);
+    const d2=new Date(dates[i-1]);
+    if((d1-d2)/(1000*3600*24)===1) streak++; else break;
+  }
+  return streak;
+}
+
+function updateAchievements(){
+  const container=document.getElementById("achievementsContainer");
+  container.innerHTML="";
+  achievements.forEach(a=>{
+    const el=document.createElement("div");
+    el.className="achievement";
+    el.textContent=a.text;
+    if(a.condition()) el.classList.add("unlocked");
+    container.appendChild(el);
+    if(a.condition() && !el.classList.contains("shown")){
+      el.classList.add("shown");
+      el.style.transform="scale(1.2)";
+      setTimeout(()=>el.style.transform="scale(1)",500);
+    }
+  });
+}
+
+// Charts
+let dailyChartInstance, weeklyChartInstance;
+function updateCharts(){
+  const dailyCtx=document.getElementById("dailyChart").getContext("2d");
+  const sortedDates=Object.keys(dailyLog).sort();
+  const dailyData=sortedDates.map(d=>dailyLog[d]/60);
+  if(dailyChartInstance) dailyChartInstance.destroy();
+  dailyChartInstance=new Chart(dailyCtx,{ type:'line', data:{ labels:sortedDates, datasets:[{label:"Hours Studied", data:dailyData, backgroundColor:'rgba(0,216,255,0.2)', borderColor:'#00d8ff', borderWidth:2, fill:true}] }, options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }});
+
+  const weeklyCtx=document.getElementById("weeklyChart").getContext("2d");
+  let weeklyData={}, week=0;
+  sortedDates.forEach(d=>{ week=Math.floor(new Date(d).getTime()/(1000*3600*24*7)); weeklyData[week]=(weeklyData[week]||0)+dailyLog[d]; });
+  const weekLabels=Object.keys(weeklyData).map(w=>`Week ${parseInt(w)+1}`);
+  const weekHours=Object.values(weeklyData).map(m=>m/60);
+  if(weeklyChartInstance) weeklyChartInstance.destroy();
+  weeklyChartInstance=new Chart(weeklyCtx,{ type:'bar', data:{ labels:weekLabels, datasets:[{label:"Weekly Hours", data:weekHours, backgroundColor:'#00d8ff'}]}, options:{ responsive:true, scales:{ y:{ beginAtZero:true }}}});
 }
 
 window.onload=()=>{ updateUI(); showMotivation(); };

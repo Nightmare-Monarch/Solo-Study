@@ -5,12 +5,12 @@
   <title>🗡️ Solo Study Tracker</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container">
     <h1 class="title">🗡️ Solo Study Tracker</h1>
 
-    <!-- Motivation -->
     <div id="motivation" class="motivation"></div>
 
     <!-- Navigation -->
@@ -29,17 +29,22 @@
     <!-- Subjects -->
     <div id="subjectContainer" class="subjects"></div>
 
+    <!-- Achievements -->
+    <div id="achievementsContainer" class="achievements"></div>
+
+    <!-- Charts -->
+    <canvas id="dailyChart" width="400" height="200"></canvas>
+    <canvas id="weeklyChart" width="400" height="200"></canvas>
+
     <!-- Bottom bar -->
     <div id="bottomBar">
       <div class="bottom-bar-content">
         <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
-        <div class="progress full-marks">
-          <div id="fullMarksFill" class="progress-fill"></div>
-        </div>
+        <div class="progress full-marks"><div id="fullMarksFill" class="progress-fill"></div></div>
+
         <strong>Total XP: <span id="totalXPBottom">0</span></strong>
-        <div class="progress full-xp">
-          <div id="fullXPFill" class="progress-fill xp-fill"></div>
-        </div>
+        <div class="progress full-xp"><div id="fullXPFill" class="progress-fill xp-fill"></div></div>
+
         <div class="undo-redo">
           <button class="btn" onclick="undo()">Undo</button>
           <button class="btn" onclick="redo()">Redo</button>
