@@ -1,55 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>🗡️ Solo Study Tracker</title>
-<link rel="stylesheet" href="style.css">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>🗡️ Solo Study Tracker</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
+
     <h1 class="title">🗡️ Solo Study Tracker</h1>
 
-    <!-- Motivation quote -->
-    <div id="motivation" class="motivation">Stay focused and never give up!</div>
+    <!-- Motivation -->
+    <div class="motivation">
+      <p id="motivationQuote">“Study hard, shine later!”</p>
+    </div>
 
-    <!-- Top menu below motivation -->
+    <!-- Top menu -->
     <div class="menu top-menu">
       <a href="history.html" class="menu-btn curved-btn">📜 History</a>
       <a href="stopwatch.html" class="menu-btn curved-btn">⏱️ Stopwatch</a>
     </div>
 
-    <!-- Subjects input -->
+    <!-- Input section -->
     <div class="input-section">
-      <input id="sessionInput" placeholder="e.g. sin 5h 6h pp q">
+      <input id="sessionInput" placeholder="e.g. sin 1h 30m pp q">
       <button class="btn curved-btn" onclick="handleSessionInput()">Add Session</button>
     </div>
 
-    <!-- Subjects list -->
+    <!-- Subjects -->
     <div id="subjectContainer" class="subjects"></div>
 
-    <!-- Achievements -->
-    <h2 class="section-title">🏆 Achievements</h2>
-    <div id="achievementsContainer" class="achievements"></div>
-
-    <!-- Bottom bar -->
-    <div id="bottomBar">
-      <div class="bottom-bar-content">
-        <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
-        <div class="progress full-marks">
-          <div id="fullMarksFill" class="progress-fill"></div>
-        </div>
+    <!-- Total Marks Bar -->
+    <div class="total-bar">
+      <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
+      <div class="progress full-marks">
+        <div id="fullMarksFill" class="progress-fill"></div>
       </div>
-      <div class="undo-redo bottom-buttons">
-        <button class="btn curved-btn" onclick="undo()">Undo</button>
-        <button class="btn curved-btn" onclick="redo()">Redo</button>
-        <button class="btn curved-btn reset-btn" onclick="resetAll()">Reset All</button>
+      <strong>Total XP: <span id="totalXPBottom">0</span></strong>
+      <div class="progress full-xp">
+        <div id="fullXPFill" class="progress-fill"></div>
       </div>
     </div>
+
   </div>
 
-  <audio id="levelupSound" src="sounds/levelup.mp3"></audio>
-  <audio id="punishSound" src="sounds/punish.mp3"></audio>
+  <!-- Fixed bottom buttons -->
+  <div id="bottomButtons">
+    <button class="btn curved-btn" onclick="undo()">Undo</button>
+    <button class="btn curved-btn" onclick="redo()">Redo</button>
+    <button class="btn curved-btn" onclick="resetAll()">Reset All</button>
+  </div>
 
   <script src="script.js"></script>
 </body>
