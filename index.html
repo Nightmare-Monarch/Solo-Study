@@ -5,50 +5,44 @@
   <title>🗡️ Solo Study Tracker</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container">
     <h1 class="title">🗡️ Solo Study Tracker</h1>
 
-    <!-- Motivation & Stopwatch -->
-    <div class="top-section">
-      <div id="motivation" class="motivation"></div>
-      <div class="stopwatch-section">
-        <span id="stopwatchDisplay">00:00:00</span>
-        <button class="btn" id="startStopwatch">Start</button>
-        <button class="btn" id="pauseStopwatch">Pause</button>
-        <button class="btn" id="resetStopwatch">Reset</button>
-        <button class="btn" id="submitStopwatch">Submit</button>
-      </div>
-    </div>
+    <!-- Motivation Quotes -->
+    <div id="motivation" class="motivation"></div>
 
-    <!-- Subjects Input -->
+    <!-- Session Input -->
     <div class="input-section">
       <input id="sessionInput" placeholder="e.g. sin 5h 6h pp q">
       <button class="btn" onclick="handleSessionInput()">Add Session</button>
     </div>
 
-    <!-- Circular Bars -->
-    <div id="circularBars" class="circular-bars"></div>
-
-    <!-- Charts -->
-    <div class="charts-section">
-      <canvas id="dailyChart"></canvas>
-      <canvas id="weeklyChart"></canvas>
-    </div>
-
-    <!-- Achievements -->
-    <h2>Achievements</h2>
-    <div id="achievementsContainer" class="achievements"></div>
-  </div>
-
-  <!-- Bottom Bar -->
-  <div id="bottomBar">
-    <div class="bottom-bar-content">
+    <!-- Undo/Redo/Reset buttons -->
+    <div class="undo-redo">
       <button class="btn" onclick="undo()">Undo</button>
       <button class="btn" onclick="redo()">Redo</button>
       <button class="btn" onclick="resetAll()">Reset All</button>
+    </div>
+
+    <!-- Subjects -->
+    <div id="subjectContainer" class="subjects"></div>
+
+    <!-- Bottom Menu -->
+    <div class="menu">
+      <a href="timer.html" class="menu-btn">⏱️ Timer</a>
+      <a href="history.html" class="menu-btn">📜 History</a>
+    </div>
+  </div>
+
+  <!-- Bottom total marks bar -->
+  <div id="bottomBar">
+    <div class="bottom-bar-content">
+      <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
+      <div class="progress full-marks">
+        <div id="fullMarksFill" class="progress-fill"></div>
+      </div>
     </div>
   </div>
 
