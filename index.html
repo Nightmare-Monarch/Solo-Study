@@ -1,97 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Solo Study Tracker</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8">
+<title>Solo Study Tracker</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1 class="title">🗡️ Solo Study Tracker</h1>
-
-    <div class="input-section">
-      <input id="sessionInput" placeholder="e.g. sin 5h 6h pp q">
-      <button class="btn" onclick="handleSessionInput()">Add Session</button>
-    </div>
 
 
+<!-- Top Menu -->
+<div class="top-menu">
+  <a href="#" onclick="showSection('motivationSection')">Motivation</a>
+  <a href="history.html">History</a>
+  <a href="stopwatch.html">Stopwatch</a>
+  <a href="progress.html">Progress & Achievements</a>
+</div>
 
+<div class="container">
+  <h1 class="title">🗡️ Solo Study Tracker</h1>
 
-    <div class="undo-redo">
-      <button class="btn" onclick="undo()">Undo</button>
-      <button class="btn" onclick="redo()">Redo</button>
-      <button class="btn reset-btn" onclick="resetAll()">Reset All</button>
-    </div>
-
-    <div id="subjectContainer" class="subjects"></div>
-
-    <h2 class="subtitle">📊 Progress Chart</h2>
-    <canvas id="progressChart" height="150"></canvas>
-
-    <h2 class="subtitle">🏆 Achievements</h2>
-    <div id="achievementContainer" class="achievements"></div>
-
-    <h2 class="subtitle">💡 Motivation</h2>
-    <div id="quoteContainer" class="quote"></div>
-
-    <div class="menu">
-      <a href="stopwatch.html" class="menu-btn">⏱️ Stopwatch</a>
-      <a href="history.html" class="menu-btn">📜 History</a>
-    </div>
+  <!-- Motivation Section -->
+  <div id="motivationSection" class="section">
+    <p id="motivationQuote" class="quote"></p>
+    <button class="btn" onclick="newQuote()">New Quote</button>
   </div>
 
+  <!-- Subject List -->
+  <div id="subjectContainer" class="subjects"></div>
 
-  <!-- Bottom total bars -->
-  <div id="bottomBar">
-    <div class="bottom-bar-content">
-      <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
-      <div class="progress full-marks">
-        <div id="fullMarksFill" class="progress-fill"></div>
-      </div>
-      <strong>Total XP: <span id="totalXPBottom">0</span> / 2000</strong>
-      <div class="progress full-xp">
-        <div id="fullXPFill" class="progress-fill"></div>
-      </div>
-    </div>
+  <!-- Session Input -->
+  <div class="input-section">
+    <input id="sessionInput" placeholder="e.g. sin 5h 6h pp q">
+    <button class="btn" onclick="handleSessionInput()">Add Session</button>
   </div>
+</div>
 
+<!-- Bottom Bar -->
+<div id="bottomBar">
+  <button class="btn" onclick="undo()">Undo</button>
+  <button class="btn" onclick="redo()">Redo</button>
+  <button class="btn" onclick="resetAll()">Reset All</button>
+  <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
+  <div class="progress full-marks">
+    <div id="fullMarksFill" class="progress-fill"></div>
+  </div>
+  <strong>Total XP: <span id="totalXPBottom">0</span></strong>
+  <div class="progress full-xp">
+    <div id="fullXPFill" class="progress-fill"></div>
+  </div>
+</div>
 
+<script src="script.js"></script>
+<script>
+// Motivation Quotes
+const quotes=[
+  "Push yourself, because no one else will.",
+  "Small steps every day.",
+  "Focus today, success tomorrow.",
+  "Discipline is choosing between what you want now and what you want most.",
+  "Consistency is key to mastery."
+];
 
+function newQuote(){
+  const q=quotes[Math.floor(Math.random()*quotes.length)];
+  document.getElementById("motivationQuote").textContent=q;
+}
 
+newQuote(); // initial quote
 
+// Smooth transition for section
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.style.display='none');
+  const sec=document.getElementById(id);
+  sec.style.display='block';
+  sec.style.opacity=0;
+  let op=0;
+  const fade=setInterval(()=>{
+    op+=0.05;
+    sec.style.opacity=op;
+    if(op>=1) clearInterval(fade);
+  },20);
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <audio id="levelupSound" src="sounds/levelup.mp3"></audio>
-  <audio id="punishSound" src="sounds/punish.mp3"></audio>
-
-
-
-
-
-
-
-
-
-
-
-
-  <script src="script.js"></script>
-
-
+// Show motivation initially
+showSection('motivationSection');
+</script>
 </body>
 </html>
