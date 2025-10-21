@@ -7,22 +7,30 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>🗡️ Solo Study Tracker</header>
-
   <div class="container">
+    <h1 class="title">🗡️ Solo Study Tracker</h1>
+
     <div class="input-section">
       <input id="sessionInput" placeholder="e.g. sin 5h 30m pp q">
-      <button onclick="handleSessionInput()">Add Session</button>
+      <button class="btn" onclick="handleSessionInput()">Add Session</button>
     </div>
 
-    <div id="subjectContainer"></div>
+    <div id="subjectContainer" class="subjects"></div>
 
-    <div id="summaryContainer"></div>
+    <div class="bottom-summary">
+      <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
+      <strong>Total XP: <span id="totalXPBottom">0</span></strong>
+    </div>
 
     <div class="bottom-buttons">
-      <button onclick="undo()">Undo</button>
-      <button onclick="redo()">Redo</button>
-      <button onclick="resetAll()">Reset All</button>
+      <button class="btn" onclick="undo()">Undo</button>
+      <button class="btn" onclick="redo()">Redo</button>
+      <button class="btn" onclick="resetAll()">Reset All</button>
+    </div>
+
+    <div class="menu">
+      <a href="stopwatch.html" class="menu-btn">⏱️ Stopwatch</a>
+      <a href="history.html" class="menu-btn">📜 History</a>
     </div>
   </div>
 

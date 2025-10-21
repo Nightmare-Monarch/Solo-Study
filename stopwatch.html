@@ -1,51 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Stopwatch Study Tracker</title>
-<link rel="stylesheet" href="style.css">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Stopwatch</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="container">
+    <h1 class="title">⏱️ Stopwatch</h1>
 
-<div class="top-menu">
-  <a href="index.html">Dashboard</a>
-  <a href="history.html">History</a>
-  <a href="progress.html">Progress</a>
-</div>
-
-<div class="container">
-  <h1 class="title">⏱️ Stopwatch</h1>
-
-  <div class="input-section">
-    <select id="subjectSelect">
-      <option value="" disabled selected>Select Subject</option>
-      <option value="sin">Sinhala</option>
-      <option value="sci">Science</option>
-      <option value="com">Commerce</option>
-      <option value="bud">Buddhism</option>
-      <option value="his">History</option>
-      <option value="dan">Dancing</option>
-      <option value="hea">Health</option>
-      <option value="mat">Maths</option>
-      <option value="eng">English</option>
-    </select>
-  </div>
-
-  <div class="timer-display">
-    <h2 id="stopwatch">00:00:00</h2>
-    <div class="stopwatch-buttons">
-      <button class="btn" onclick="startStopwatch()">Start</button>
-      <button class="btn" onclick="pauseStopwatch()">Pause</button>
-      <button class="btn" onclick="resetStopwatch()">Reset</button>
+    <div class="stopwatch-section">
+      <div id="stopwatchDisplay">00:00:00</div>
+      <div class="stopwatch-buttons">
+        <button class="btn" onclick="startStopwatch()">Start</button>
+        <button class="btn" onclick="pauseStopwatch()">Pause</button>
+        <button class="btn" onclick="resetStopwatch()">Reset</button>
+        <button class="btn" onclick="submitStopwatch()">Submit Session</button>
+      </div>
+      <input id="stopwatchSubject" placeholder="Subject code (e.g. sin)">
+      <label><input type="checkbox" id="ppCheck"> PP</label>
+      <label><input type="checkbox" id="qCheck"> Quiz</label>
     </div>
+
+    <a href="index.html" class="menu-btn">🏠 Back</a>
   </div>
 
-  <div class="input-section">
-    <button class="btn" onclick="submitStopwatch()">Submit Session</button>
-  </div>
-</div>
-
-<script src="stopwatch.js"></script>
+  <script src="stopwatch.js"></script>
 </body>
 </html>
