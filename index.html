@@ -2,96 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Solo Study Tracker</title>
+  <title>🗡️ Solo Study Tracker</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container">
     <h1 class="title">🗡️ Solo Study Tracker</h1>
 
-    <div class="input-section">
-      <input id="sessionInput" placeholder="e.g. sin 5h 6h pp q">
-      <button class="btn" onclick="handleSessionInput()">Add Session</button>
-    </div>
+    <!-- Motivation -->
+    <div id="motivation" class="motivation"></div>
 
-
-
-
-    <div class="undo-redo">
-      <button class="btn" onclick="undo()">Undo</button>
-      <button class="btn" onclick="redo()">Redo</button>
-      <button class="btn reset-btn" onclick="resetAll()">Reset All</button>
-    </div>
-
-    <div id="subjectContainer" class="subjects"></div>
-
-    <h2 class="subtitle">📊 Progress Chart</h2>
-    <canvas id="progressChart" height="150"></canvas>
-
-    <h2 class="subtitle">🏆 Achievements</h2>
-    <div id="achievementContainer" class="achievements"></div>
-
-    <h2 class="subtitle">💡 Motivation</h2>
-    <div id="quoteContainer" class="quote"></div>
-
+    <!-- Navigation -->
     <div class="menu">
       <a href="stopwatch.html" class="menu-btn">⏱️ Stopwatch</a>
       <a href="history.html" class="menu-btn">📜 History</a>
+      <a href="progress.html" class="menu-btn">📊 Progress</a>
     </div>
-  </div>
 
+    <!-- Session Input -->
+    <div class="input-section">
+      <input id="sessionInput" placeholder="e.g. sin 5h 30m pp q">
+      <button class="btn" onclick="handleSessionInput()">Add Session</button>
+    </div>
 
-  <!-- Bottom total bars -->
-  <div id="bottomBar">
-    <div class="bottom-bar-content">
-      <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
-      <div class="progress full-marks">
-        <div id="fullMarksFill" class="progress-fill"></div>
-      </div>
-      <strong>Total XP: <span id="totalXPBottom">0</span> / 2000</strong>
-      <div class="progress full-xp">
-        <div id="fullXPFill" class="progress-fill"></div>
+    <!-- Subjects -->
+    <div id="subjectContainer" class="subjects"></div>
+
+    <!-- Bottom bar -->
+    <div id="bottomBar">
+      <div class="bottom-bar-content">
+        <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
+        <div class="progress full-marks">
+          <div id="fullMarksFill" class="progress-fill"></div>
+        </div>
+        <strong>Total XP: <span id="totalXPBottom">0</span></strong>
+        <div class="progress full-xp">
+          <div id="fullXPFill" class="progress-fill xp-fill"></div>
+        </div>
+        <div class="undo-redo">
+          <button class="btn" onclick="undo()">Undo</button>
+          <button class="btn" onclick="redo()">Redo</button>
+          <button class="btn reset-btn" onclick="resetAll()">Reset All</button>
+        </div>
       </div>
     </div>
+
   </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   <audio id="levelupSound" src="sounds/levelup.mp3"></audio>
   <audio id="punishSound" src="sounds/punish.mp3"></audio>
 
-
-
-
-
-
-
-
-
-
-
-
   <script src="script.js"></script>
-
-
 </body>
 </html>
