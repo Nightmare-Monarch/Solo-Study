@@ -2,37 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>History</title>
+  <title>Study History</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>📜 Study History</h1>
-    <nav>
-      <a href="index.html">🏠 Home</a>
-      <a href="stopwatch.html">⏱️ Stopwatch</a>
-    </nav>
-  </header>
+  <div class="container">
+    <h1 class="title">📜 Study History</h1>
 
-  <ul id="historyList"></ul>
-  <button onclick="clearHistory()">Clear All</button>
+    <div id="historyContainer" class="history-list"></div>
 
-  <script>
-    function loadHistory(){
-      let h = JSON.parse(localStorage.getItem("sessionHistory")||"[]");
-      const list = document.getElementById("historyList");
-      list.innerHTML="";
-      h.forEach((item,i)=>{
-        const li=document.createElement("li");
-        li.textContent = `Session ${i+1}`;
-        list.appendChild(li);
-      });
-    }
-    function clearHistory(){
-      localStorage.removeItem("sessionHistory");
-      loadHistory();
-    }
-    loadHistory();
-  </script>
+    <div class="history-actions">
+      <button class="btn" onclick="clearHistory()">Clear All</button>
+      <a href="index.html" class="menu-btn">🏠 Back</a>
+    </div>
+  </div>
+
+  <script src="history.js"></script>
 </body>
 </html>
