@@ -1,83 +1,59 @@
-function loadProgress(){
-  const container = document.getElementById("progressContainer");
-  container.innerHTML = "";
+// Get session data from localStorage
+let sessionHistory = JSON.parse(localStorage.getItem("sessionHistory")) || [];
+let subjects = JSON.parse(localStorage.getItem("subjects")) || [];
 
-  let data = JSON.parse(localStorage.getItem("progressData")) || [];
-  if(data.length === 0){
-    container.innerHTML = "<p>No progress data yet.</p>";
-    return;
+// Prepare daily data
+let dailyData = {};
 
+// Go through sessionHistory and calculate hours per day
+sessionHistory.forEach(snapshot => {
+    let subData = JSON.parse(snapshot);
+    let date = new Date().toLocaleDateString();
+    let hoursToday = 0;
+    subData.forEach(s => {
+        hoursToday += s.marks * (15 / 100); // convert marks to hours approx
+    });
+    if(dailyData[date]) dailyData[date] += hoursToday;
+    else dailyData[date] = hoursToday;
+});
 
+// Sort dates
+let dates = Object.keys(dailyData);
+let hours = Object.values(dailyData);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  }
-
-
-
-
-
-
-
-
-  // Sort by date (newest last)
-  data.sort((a,b)=>new Date(a.date)-new Date(b.date));
-
-
-  // Find max for progress bar scaling
-  const maxMinutes = Math.max(...data.map(d=>d.minutes));
-
-
-
-  data.forEach(entry=>{
-    const hours = (entry.minutes/60).toFixed(2);
-    const width = (entry.minutes/maxMinutes)*100;
-
-
-
-
-
-
-
-
-
-
-    container.innerHTML += `
-      <div class="subject">
-        <strong>${entry.date}</strong> - ${hours} hours
-        <div class="progress marks-bar">
-          <div class="progress-fill" style="width:${width}%;"></div>
-        </div>
-      </div>
-    `;
-  });
-}
-
-window.onload = loadProgress;
+// Create chart
+const ctx = document.getElementById('progressChart').getContext('2d');
+const progressChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: dates,
+        datasets: [{
+            label: 'Hours Studied',
+            data: hours,
+            borderColor: '#00d8ff',
+            backgroundColor: 'rgba(0,216,255,0.2)',
+            fill: true,
+            tension: 0.4,
+            pointRadius: 6,
+            pointHoverRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: true, labels: { color: '#00d8ff' } },
+            tooltip: { mode: 'index', intersect: false }
+        },
+        scales: {
+            x: { 
+                ticks: { color: '#00d8ff' },
+                grid: { color: 'rgba(255,255,255,0.1)' }
+            },
+            y: { 
+                beginAtZero: true,
+                ticks: { color: '#00d8ff' },
+                grid: { color: 'rgba(255,255,255,0.1)' }
+            }
+        }
+    }
+});

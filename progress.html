@@ -1,35 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>📈 Progress History</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<title>📊 Study Progress</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1 class="title">📅 Progress History</h1>
+<div class="container">
+  <h1 class="title">📊 Study Progress</h1>
 
-    <div id="progressContainer"></div>
+  <canvas id="progressChart" height="200"></canvas>
 
-
-
-
-
-    <a href="index.html" class="menu-btn">🏠 Back</a>
+  <div class="menu top-menu">
+    <a href="index.html" class="menu-btn curved-btn">🏠 Back</a>
   </div>
+</div>
 
-  <script src="progress.js"></script>
-
-
-
-
-
-
-
-
-
-
-
+<script src="progress.js"></script>
 </body>
 </html>
