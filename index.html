@@ -11,48 +11,45 @@
   <div class="container">
     <h1 class="title">🗡️ Solo Study Tracker</h1>
 
-    <div id="motivation" class="motivation"></div>
-
-    <!-- Navigation -->
-    <div class="menu">
-      <a href="stopwatch.html" class="menu-btn">⏱️ Stopwatch</a>
-      <a href="history.html" class="menu-btn">📜 History</a>
-      <a href="progress.html" class="menu-btn">📊 Progress</a>
-    </div>
-
-    <!-- Session Input -->
-    <div class="input-section">
-      <input id="sessionInput" placeholder="e.g. sin 5h 30m pp q">
-      <button class="btn" onclick="handleSessionInput()">Add Session</button>
-    </div>
-
-    <!-- Subjects -->
-    <div id="subjectContainer" class="subjects"></div>
-
-    <!-- Achievements -->
-    <div id="achievementsContainer" class="achievements"></div>
-
-    <!-- Charts -->
-    <canvas id="dailyChart" width="400" height="200"></canvas>
-    <canvas id="weeklyChart" width="400" height="200"></canvas>
-
-    <!-- Bottom bar -->
-    <div id="bottomBar">
-      <div class="bottom-bar-content">
-        <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
-        <div class="progress full-marks"><div id="fullMarksFill" class="progress-fill"></div></div>
-
-        <strong>Total XP: <span id="totalXPBottom">0</span></strong>
-        <div class="progress full-xp"><div id="fullXPFill" class="progress-fill xp-fill"></div></div>
-
-        <div class="undo-redo">
-          <button class="btn" onclick="undo()">Undo</button>
-          <button class="btn" onclick="redo()">Redo</button>
-          <button class="btn reset-btn" onclick="resetAll()">Reset All</button>
-        </div>
+    <!-- Motivation & Stopwatch -->
+    <div class="top-section">
+      <div id="motivation" class="motivation"></div>
+      <div class="stopwatch-section">
+        <span id="stopwatchDisplay">00:00:00</span>
+        <button class="btn" id="startStopwatch">Start</button>
+        <button class="btn" id="pauseStopwatch">Pause</button>
+        <button class="btn" id="resetStopwatch">Reset</button>
+        <button class="btn" id="submitStopwatch">Submit</button>
       </div>
     </div>
 
+    <!-- Subjects Input -->
+    <div class="input-section">
+      <input id="sessionInput" placeholder="e.g. sin 5h 6h pp q">
+      <button class="btn" onclick="handleSessionInput()">Add Session</button>
+    </div>
+
+    <!-- Circular Bars -->
+    <div id="circularBars" class="circular-bars"></div>
+
+    <!-- Charts -->
+    <div class="charts-section">
+      <canvas id="dailyChart"></canvas>
+      <canvas id="weeklyChart"></canvas>
+    </div>
+
+    <!-- Achievements -->
+    <h2>Achievements</h2>
+    <div id="achievementsContainer" class="achievements"></div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div id="bottomBar">
+    <div class="bottom-bar-content">
+      <button class="btn" onclick="undo()">Undo</button>
+      <button class="btn" onclick="redo()">Redo</button>
+      <button class="btn" onclick="resetAll()">Reset All</button>
+    </div>
   </div>
 
   <audio id="levelupSound" src="sounds/levelup.mp3"></audio>

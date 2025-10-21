@@ -1,25 +1,43 @@
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: 'Orbitron', sans-serif; background:#1e1e2f; color:#fff; min-height:100vh; display:flex; justify-content:center; align-items:flex-start; padding:30px; }
-.container { width:100%; max-width:800px; background:#2b2b3f; border-radius:20px; padding:30px; box-shadow:0 0 30px rgba(0,0,0,0.5); margin-bottom:100px; }
-.title { text-align:center; font-size:3rem; color:#00d8ff; text-shadow:0 0 10px #00d8ff; margin-bottom:20px; }
-.motivation { text-align:center; font-size:1.2rem; color:#fffa; margin-bottom:15px; }
-.input-section { display:flex; justify-content:center; margin-bottom:15px; gap:10px; }
-#sessionInput { flex:1; padding:12px; border-radius:12px; border:none; outline:none; font-size:1rem; background:#1b1b2a; color:#fff; }
-.btn { padding:10px 20px; border:none; background:linear-gradient(90deg,#00d8ff,#0077aa); color:#fff; font-weight:bold; border-radius:12px; cursor:pointer; transition:0.3s; }
+body {
+  font-family: 'Orbitron', sans-serif;
+  background: #1e1e2f;
+  color: #fff;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  padding:20px 0;
+}
+.container {
+  width:95%;
+  max-width:1000px;
+  background:#2b2b3f;
+  border-radius:20px;
+  padding:20px 30px;
+  box-shadow:0 0 30px rgba(0,0,0,0.5);
+}
+.title {
+  text-align:center;
+  font-size:3rem;
+  color:#00d8ff;
+  text-shadow:0 0 10px #00d8ff;
+  margin-bottom:20px;
+}
+.input-section { display:flex; justify-content:center; margin-bottom:20px; }
+#sessionInput { flex:1; padding:12px; border-radius:12px 0 0 12px; border:none; outline:none; font-size:1rem; background:#1b1b2a; color:#fff; }
+.btn { padding:12px 20px; border:none; background:linear-gradient(90deg,#00d8ff,#0077aa); color:#fff; font-weight:bold; border-radius:0 12px 12px 0; cursor:pointer; transition:0.3s; margin-left:2px; }
 .btn:hover { background:linear-gradient(90deg,#0077aa,#00d8ff); }
-.menu { display:flex; justify-content:center; margin-bottom:20px; gap:10px; flex-wrap:wrap; }
-.menu-btn { padding:10px 20px; border-radius:12px; background:linear-gradient(90deg,#00d8ff,#0077aa); text-decoration:none; color:#fff; font-weight:bold; transition:0.3s; }
-.menu-btn:hover { background:linear-gradient(90deg,#0077aa,#00d8ff); }
-.subjects .subject { background:#1b1b2a; padding:15px; margin:10px 0; border-radius:12px; box-shadow:0 0 10px rgba(0,216,255,0.3); opacity:0; transform:translateY(20px); transition:all 0.6s ease; }
-.subjects .subject.visible { opacity:1; transform:translateY(0); }
-.progress { width:100%; height:14px; background:rgba(255,255,255,0.1); border-radius:10px; margin:8px 0; }
-.progress-fill { height:100%; border-radius:10px; transition:width 1s ease-in-out; }
-.xp-fill { background:linear-gradient(90deg,#00ffdd,#00aa88); }
-.marks-bar .progress-fill { background:linear-gradient(90deg,#ff7f50,#ff4500); }
-#bottomBar { position:fixed; bottom:0; left:0; width:100%; background:#222233; padding:15px 30px; box-shadow:0 -2px 10px rgba(0,0,0,0.5); z-index:1000; }
-.bottom-bar-content { max-width:800px; margin:0 auto; }
-.undo-redo { display:flex; justify-content:center; gap:10px; margin-top:10px; flex-wrap:wrap; }
-.achievements { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:15px 0; }
-.achievement { width:80px; height:80px; background:#1b1b2a; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:0.8rem; text-align:center; opacity:0; transform:scale(0.7); transition:all 0.5s ease; }
-.achievement.unlocked { opacity:1; transform:scale(1); border:2px solid #00d8ff; box-shadow:0 0 10px #00d8ff; }
-canvas { background:#2b2b3f; border-radius:12px; margin:10px 0; }
+.circular-bars { display:flex; flex-wrap:wrap; justify-content:center; gap:25px; margin-bottom:20px; }
+.circular-bar { width:120px; height:120px; position:relative; }
+.circular-bar canvas { position:absolute; top:0; left:0; }
+.circular-bar .label { position:absolute; width:100%; text-align:center; top:45%; font-size:1rem; }
+.charts-section { display:flex; flex-wrap:wrap; justify-content:space-around; gap:30px; margin-bottom:20px; }
+.achievements { display:flex; flex-wrap:wrap; gap:15px; margin-bottom:50px; }
+.achievement { padding:10px 12px; border-radius:12px; background:rgba(255,255,255,0.1); color:#fff; transition:0.3s; }
+.achievement.unlocked { background:linear-gradient(90deg,#00d8ff,#0077aa); transform:scale(1.2); }
+#bottomBar {
+  position:fixed; bottom:0; left:0; width:100%; background:#222233; padding:10px 20px; box-shadow:0 -2px 10px rgba(0,0,0,0.5); display:flex; justify-content:center;
+}
+.stopwatch-section { display:flex; gap:5px; justify-content:center; align-items:center; margin-bottom:15px; }
+#stopwatchDisplay { font-size:1.3rem; color:#00d8ff; min-width:80px; text-align:center; }
+.motivation { font-size:1rem; color:#fff; text-align:center; margin-bottom:10px; }
