@@ -1,47 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>🗡️ Solo Study Tracker</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<title>🗡️ Solo Study Tracker</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
     <h1 class="title">🗡️ Solo Study Tracker</h1>
 
-    <!-- Motivation Quotes -->
-    <div id="motivation" class="motivation"></div>
+    <!-- Top menu -->
+    <div class="menu top-menu">
+      <a href="history.html" class="menu-btn">📜 History</a>
+      <a href="stopwatch.html" class="menu-btn">⏱️ Stopwatch</a>
+    </div>
 
-    <!-- Session Input -->
+    <!-- Motivation quote -->
+    <div id="motivation" class="motivation">Stay focused and never give up!</div>
+
+    <!-- Subjects input -->
     <div class="input-section">
       <input id="sessionInput" placeholder="e.g. sin 5h 6h pp q">
       <button class="btn" onclick="handleSessionInput()">Add Session</button>
     </div>
 
-    <!-- Undo/Redo/Reset buttons -->
-    <div class="undo-redo">
-      <button class="btn" onclick="undo()">Undo</button>
-      <button class="btn" onclick="redo()">Redo</button>
-      <button class="btn" onclick="resetAll()">Reset All</button>
-    </div>
-
-    <!-- Subjects -->
+    <!-- Subjects list -->
     <div id="subjectContainer" class="subjects"></div>
 
-    <!-- Bottom Menu -->
-    <div class="menu">
-      <a href="timer.html" class="menu-btn">⏱️ Timer</a>
-      <a href="history.html" class="menu-btn">📜 History</a>
-    </div>
-  </div>
+    <!-- Achievements -->
+    <h2 class="section-title">🏆 Achievements</h2>
+    <div id="achievementsContainer" class="achievements"></div>
 
-  <!-- Bottom total marks bar -->
-  <div id="bottomBar">
-    <div class="bottom-bar-content">
-      <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
-      <div class="progress full-marks">
-        <div id="fullMarksFill" class="progress-fill"></div>
+    <!-- Bottom bar -->
+    <div id="bottomBar">
+      <div class="bottom-bar-content">
+        <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
+        <div class="progress full-marks">
+          <div id="fullMarksFill" class="progress-fill"></div>
+        </div>
+      </div>
+      <div class="undo-redo bottom-buttons">
+        <button class="btn" onclick="undo()">Undo</button>
+        <button class="btn" onclick="redo()">Redo</button>
+        <button class="btn reset-btn" onclick="resetAll()">Reset All</button>
       </div>
     </div>
   </div>
