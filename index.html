@@ -5,6 +5,7 @@
   <title>Solo Study Tracker</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container">
@@ -23,19 +24,31 @@
 
     <div id="subjectContainer" class="subjects"></div>
 
+    <h2 class="subtitle">📊 Progress Chart</h2>
+    <canvas id="progressChart" height="150"></canvas>
+
+    <h2 class="subtitle">🏆 Achievements</h2>
+    <div id="achievementContainer" class="achievements"></div>
+
+    <h2 class="subtitle">💡 Motivation</h2>
+    <div id="quoteContainer" class="quote"></div>
+
     <div class="menu">
-      <a href="timer.html" class="menu-btn">⏱️ Timer</a>
+      <a href="stopwatch.html" class="menu-btn">⏱️ Stopwatch</a>
       <a href="history.html" class="menu-btn">📜 History</a>
-      <a href="progress.html" class="menu-btn">📈 Progress</a>
     </div>
   </div>
 
-  <!-- Bottom total marks bar -->
+  <!-- Bottom total bars -->
   <div id="bottomBar">
     <div class="bottom-bar-content">
       <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
       <div class="progress full-marks">
         <div id="fullMarksFill" class="progress-fill"></div>
+      </div>
+      <strong>Total XP: <span id="totalXPBottom">0</span> / 2000</strong>
+      <div class="progress full-xp">
+        <div id="fullXPFill" class="progress-fill"></div>
       </div>
     </div>
   </div>
