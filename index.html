@@ -1,64 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>🗡️ Solo Study Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solo Study Tracker</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="page">
-    <header class="header">
-      <h1 class="title">🗡️ Solo Study Tracker</h1>
-      <p id="motivation" class="motivation">Stay focused — one step at a time.</p>
+  <header>
+    <h1>SOLO STUDY TRACKER</h1>
+    <div class="top-buttons">
+      <button onclick="openHistory()">📜 History</button>
+      <button onclick="openStopwatch()">⏱️ Stopwatch</button>
+    </div>
+  </header>
 
-      <div class="top-actions">
-        <a class="menu-btn curved" href="history.html">📜 History</a>
-        <a class="menu-btn curved" href="stopwatch.html">⏱️ Stopwatch</a>
-        <a class="menu-btn curved" href="summary.html">📊 Progress</a>
-      </div>
-    </header>
+  <section class="motivation">
+    <h2>💪 Stay Consistent!</h2>
+    <p id="motivationText">Every step counts toward your goal.</p>
+  </section>
 
-    <main class="container">
+  <section id="subjects"></section>
 
-      <section class="session-input-section">
-        <input id="sessionInput" placeholder="e.g. sci 1h 30m pp q" />
-        <button class="btn curved" onclick="handleSessionInput()">Add Session</button>
-      </section>
+  <div class="total-section">
+    <h2>Total Progress</h2>
+    <div class="bar-container">
+      <div class="bar-label">Total Marks</div>
+      <div class="mark-bar"><div id="totalMarkBar" class="fill"></div></div>
+    </div>
+    <div class="bar-container">
+      <div class="bar-label">Total XP</div>
+      <div class="xp-bar"><div id="totalXPBar" class="fill"></div></div>
+    </div>
+  </div>
 
-      <section id="subjectContainer" class="subjects">
-        <!-- subjects will be injected here -->
-      </section>
+  <div class="session-input">
+    <input type="text" id="sessionInput" placeholder="Add study session...">
+    <button onclick="addSession()">Add</button>
+  </div>
 
-      <!-- total bars (styled like a subject) -->
-      <section class="total-bar">
-        <div class="total-row">
-          <div class="total-title">Total Marks</div>
-          <div class="total-value"><span id="totalMarksBottom">0</span> / 900</div>
-        </div>
-        <div class="progress outer">
-          <div id="fullMarksFill" class="progress-fill marks-fill" style="width:0%"></div>
-        </div>
-
-        <div class="total-row" style="margin-top:12px;">
-          <div class="total-title">Total XP</div>
-          <div class="total-value"><span id="totalXPBottom">0</span> / 100000</div>
-        </div>
-        <div class="progress outer">
-          <div id="fullXPFill" class="progress-fill xp-fill" style="width:0%"></div>
-        </div>
-      </section>
-
-    </main>
-
-    <footer class="bottom-bar">
-      <div class="bottom-actions">
-        <button class="btn curved" onclick="undo()">⟲ Undo</button>
-        <button class="btn curved" onclick="redo()">⟳ Redo</button>
-        <button class="btn curved danger" onclick="resetAll()">⛔ Reset All</button>
-      </div>
-    </footer>
+  <div class="bottom-buttons">
+    <button onclick="undo()">Undo</button>
+    <button onclick="redo()">Redo</button>
+    <button onclick="resetAll()">Reset All</button>
   </div>
 
   <script src="script.js"></script>
