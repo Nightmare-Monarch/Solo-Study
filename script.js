@@ -1,3 +1,15 @@
+// ---- CONFIG ---- //
+const MARKS_FOR_15_HOURS = 100; // 15 hours -> 100 marks
+const MINUTES_IN_15_HOURS = 15 * 60; // 900
+const MARKS_PER_MINUTE = MARKS_FOR_15_HOURS / MINUTES_IN_15_HOURS; // ≈0.111111...
+const XP_PER_HOUR = 50; // 1 hour = 50 XP
+const XP_PER_MINUTE = XP_PER_HOUR / 60; // ≈0.833333...
+const TOTAL_XP_CAP = 100000;
+const SUBJECT_XP_CAP = 100;
+const SUBJECT_MARKS_CAP = 100;
+const MAX_TOTAL_MARKS = 900; // 9 subjects * 100
+// --------------- //
+
 let subjects = JSON.parse(localStorage.getItem("subjects")) || [
   { name: "Sinhala", code: "sin", marks: 0, xp: 0 },
   { name: "Science", code: "sci", marks: 0, xp: 0 },
@@ -12,93 +24,195 @@ let subjects = JSON.parse(localStorage.getItem("subjects")) || [
 
 let sessionHistory = JSON.parse(localStorage.getItem("sessionHistory")) || [];
 let redoHistory = JSON.parse(localStorage.getItem("redoHistory")) || [];
+let dailyProgress = JSON.parse(localStorage.getItem("dailyProgress")) || []; // {date:'YYYY-MM-DD', minutes: N}
+let totalXP = parseFloat(localStorage.getItem("totalXP")) || 0;
 
-function saveData() {
+// Save all relevant data
+function saveData(){
   localStorage.setItem("subjects", JSON.stringify(subjects));
   localStorage.setItem("sessionHistory", JSON.stringify(sessionHistory));
   localStorage.setItem("redoHistory", JSON.stringify(redoHistory));
+  localStorage.setItem("dailyProgress", JSON.stringify(dailyProgress));
+  localStorage.setItem("totalXP", totalXP.toString());
 }
 
-// Update UI (marks bar fixed)
+// Utility: animate number
+function animateNumber(el, start, end, duration = 700){
+  start = parseFloat(start) || 0;
+  const range = end - start;
+  let startTime = null;
+  function step(time){
+    if(!startTime) startTime = time;
+    const t = Math.min((time - startTime) / duration, 1);
+    el.textContent = (start + range * t).toFixed(1);
+    if(t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// Build subject UI
 function updateUI(){
   const container = document.getElementById("subjectContainer");
   container.innerHTML = "";
+  // sort by marks descending
   subjects.sort((a,b)=>b.marks - a.marks);
-  subjects.forEach((s,index)=>{
-    container.innerHTML+=`
-      <div class="subject">
-        <strong>${index+1}. ${s.name}</strong> - Marks: ${s.marks.toFixed(1)}
-        <div class="progress xp-bar"><div class="progress-fill" style="width:${s.xp}%;"></div></div>
-        <div class="progress marks-bar"><div class="progress-fill" style="width:${s.marks}%;"></div></div>
-      </div>`;
+
+  subjects.forEach((s, idx) => {
+    const subjectEl = document.createElement("div");
+    subjectEl.className = "subject";
+    subjectEl.innerHTML = `
+      <div class="subject-row">
+        <h3>${idx+1}. ${s.name}</h3>
+        <div class="meta">Marks ${s.marks.toFixed(1)} • XP ${s.xp.toFixed(1)}/100</div>
+      </div>
+
+      <div class="progress-row">
+        <div class="progress" style="width:80%;margin:0 auto;">
+          <div class="progress-fill xp-fill" style="width:${Math.min(s.xp, SUBJECT_XP_CAP)}%"></div>
+        </div>
+        <div style="height:6px"></div>
+        <div class="progress" style="width:80%;margin:0 auto;">
+          <div class="progress-fill marks-fill" style="width:${Math.min(s.marks, SUBJECT_MARKS_CAP)}%"></div>
+        </div>
+      </div>
+    `;
+    container.appendChild(subjectEl);
   });
-  // Total marks bottom
+
+  // update totals
   const totalMarks = subjects.reduce((a,b)=>a+b.marks,0);
-  const maxMarks = 900;
-  document.getElementById("totalMarksBottom").textContent = totalMarks.toFixed(1);
-  document.getElementById("fullMarksFill").style.width = (totalMarks/maxMarks*100).toFixed(1)+"%";
+  const totalMarksEl = document.getElementById("totalMarksBottom");
+  animateNumber(totalMarksEl, parseFloat(totalMarksEl.textContent)||0, totalMarks);
 
-  updateAchievements();
+  const fullMarksFill = document.getElementById("fullMarksFill");
+  fullMarksFill.style.width = (Math.min(totalMarks, MAX_TOTAL_MARKS) / MAX_TOTAL_MARKS * 100).toFixed(1) + "%";
+
+  const totalXPEl = document.getElementById("totalXPBottom");
+  animateNumber(totalXPEl, parseFloat(totalXPEl.textContent)||0, totalXP);
+
+  const fullXPFill = document.getElementById("fullXPFill");
+  fullXPFill.style.width = (Math.min(totalXP, TOTAL_XP_CAP) / TOTAL_XP_CAP * 100).toFixed(2) + "%";
 }
 
-// Add session
-function handleSessionInput(){
-  const input = document.getElementById("sessionInput").value.trim().toLowerCase();
-  if(!input) return;
-  const parts = input.split(" ");
+// Parse user input like "sci 1h 30m pp q"
+function parseSessionInput(input){
+  input = (input||"").trim().toLowerCase();
+  if(!input) return null;
+  const parts = input.split(/\s+/);
   const code = parts[0];
-  let minutes=0, pp=false, quiz=false;
+  let minutes = 0;
+  let isPP = false, isQuiz = false;
   for(let i=1;i<parts.length;i++){
-    let p=parts[i];
-    if(p.endsWith("h")) minutes += (parseInt(p)||0)*60;
-    else if(p.endsWith("m")) minutes += parseInt(p)||0;
-    else if(p==="pp") pp=true;
-    else if(p==="q") quiz=true;
+    const p = parts[i];
+    if(p.endsWith("h")){
+      const n = parseInt(p.slice(0,-1))||0; minutes += n*60;
+    } else if(p.endsWith("m")){
+      minutes += parseInt(p.slice(0,-1))||0;
+    } else if(p === 'pp') isPP = true;
+    else if(p === 'q') isQuiz = true;
   }
-  sessionHistory.push(JSON.stringify(subjects));
-  redoHistory=[];
-  addSession(code,minutes,pp,quiz);
-  document.getElementById("sessionInput").value="";
-  saveData();
+  return {code, minutes, isPP, isQuiz};
 }
 
-function addSession(code,minutes,pp,quiz){
-  const sub = subjects.find(s=>s.code===code);
-  if(!sub) return alert("Invalid subject code");
-  let xpGain = minutes*(100/600); if(pp) xpGain+=5; if(quiz) xpGain+=3;
-  sub.xp += xpGain; if(sub.xp>100) sub.xp=100;
-  let marksGain = minutes*(100/600); if(pp) marksGain+=5; if(quiz) marksGain+=3;
-  sub.marks += marksGain; if(sub.marks>100) sub.marks=100;
+// Add session (minutes given)
+function addSession(code, minutes, isPP=false, isQuiz=false){
+  const subject = subjects.find(s => s.code === code);
+  if(!subject) { alert("Invalid subject code: " + code); return; }
+
+  // push snapshot for undo
+  sessionHistory.push(JSON.stringify({subjects, totalXP, dailyProgress}));
+  // clear redo stack
+  redoHistory = [];
+
+  // marks: based on minutes -> 15h = 900min => 100 marks
+  const marksGain = minutes * MARKS_PER_MINUTE; // per minute marks
+  // xp: minutes -> xp (1h = 50 xp)
+  const xpGain = minutes * XP_PER_MINUTE;
+  // optional bonuses
+  let bonusMarks = 0, bonusXP = 0;
+  if(isPP){ bonusMarks += 5; bonusXP += 5; }
+  if(isQuiz){ bonusMarks += 3; bonusXP += 3; }
+
+  subject.marks = Math.min(SUBJECT_MARKS_CAP, subject.marks + marksGain + bonusMarks);
+  subject.xp = Math.min(SUBJECT_XP_CAP, subject.xp + (xpGain + bonusXP));
+
+  // update totalXP (global) — not per-subject cap
+  totalXP = Math.min(TOTAL_XP_CAP, totalXP + (xpGain + bonusXP));
+
+  // record dailyProgress (minutes)
+  const today = new Date().toISOString().slice(0,10);
+  const rec = dailyProgress.find(r=>r.date===today);
+  if(rec) rec.minutes += minutes;
+  else dailyProgress.push({date: today, minutes: minutes});
+
+  saveData();
   updateUI();
 }
 
-// Undo/Redo/Reset
-function undo(){ if(sessionHistory.length===0) return; redoHistory.push(JSON.stringify(subjects)); subjects=JSON.parse(sessionHistory.pop()); updateUI(); saveData();}
-function redo(){ if(redoHistory.length===0) return; sessionHistory.push(JSON.stringify(subjects)); subjects=JSON.parse(redoHistory.pop()); updateUI(); saveData();}
-function resetAll(){ if(!confirm("Are you sure?")) return; subjects.forEach(s=>{s.marks=0;s.xp=0;}); sessionHistory=[]; redoHistory=[]; saveData(); updateUI();}
-
-// Motivation
-const quotes=["Stay focused and never give up!","Consistency is key to mastery.","Every hour counts, keep going!","Your future self will thank you.","Small steps lead to big progress."];
-function showMotivation(){ document.getElementById("motivation").textContent=quotes[Math.floor(Math.random()*quotes.length)]; }
-setInterval(showMotivation,15000);
-
-// Achievements (simplified)
-const achievements=[
-  {name:"1 Hour Total",hours:1},{name:"5 Hours Total",hours:5},{name:"15 Hours Total",hours:15},
-  {name:"30 Hours Total",hours:30},{name:"60 Hours Total",hours:60},{name:"100 Hours Total",hours:100},
-  {name:"150 Hours Total",hours:150},{name:"500 XP",xp:500},{name:"1000 XP",xp:1000}
-];
-function updateAchievements(){
-  const container = document.getElementById("achievementsContainer");
-  container.innerHTML="";
-  const totalXP = subjects.reduce((a,b)=>a+b.xp,0);
-  const totalHours = subjects.reduce((a,b)=>a.marks*(15/100)+a.xp*(15/100),0);
-  achievements.forEach(a=>{
-    let unlocked=false;
-    if(a.hours && totalHours>=a.hours) unlocked=true;
-    if(a.xp && totalXP>=a.xp) unlocked=true;
-    container.innerHTML+=`<div class="achievement ${unlocked?"unlocked":""}" title="${a.name}">${a.name}</div>`;
-  });
+// handlers
+function handleSessionInput(){
+  const val = document.getElementById("sessionInput").value;
+  const parsed = parseSessionInput(val);
+  if(!parsed) return;
+  addSession(parsed.code, parsed.minutes, parsed.isPP, parsed.isQuiz);
+  document.getElementById("sessionInput").value = "";
 }
 
-window.onload = ()=>{ updateUI(); showMotivation(); };
+// undo / redo / reset
+function undo(){
+  if(sessionHistory.length === 0){ alert("Nothing to undo"); return; }
+  const snap = sessionHistory.pop();
+  redoHistory.push(JSON.stringify({subjects, totalXP, dailyProgress}));
+  const obj = JSON.parse(snap);
+  subjects = JSON.parse(JSON.stringify(obj.subjects));
+  totalXP = obj.totalXP || 0;
+  dailyProgress = obj.dailyProgress || [];
+  saveData();
+  updateUI();
+}
+function redo(){
+  if(redoHistory.length === 0){ alert("Nothing to redo"); return; }
+  const snap = redoHistory.pop();
+  sessionHistory.push(JSON.stringify({subjects, totalXP, dailyProgress}));
+  const obj = JSON.parse(snap);
+  subjects = JSON.parse(JSON.stringify(obj.subjects));
+  totalXP = obj.totalXP || 0;
+  dailyProgress = obj.dailyProgress || [];
+  saveData();
+  updateUI();
+}
+function resetAll(){
+  if(!confirm("Reset all marks, XP and history?")) return;
+  subjects.forEach(s=>{ s.marks = 0; s.xp = 0; });
+  totalXP = 0;
+  sessionHistory = [];
+  redoHistory = [];
+  dailyProgress = [];
+  saveData();
+  updateUI();
+}
+
+// small helper: show motivation rotating
+const quotes = [
+  "Stay focused — one step at a time.",
+  "Small steps daily = big results.",
+  "Consistency beats intensity.",
+  "Learn. Repeat. Improve.",
+  "Discipline builds freedom."
+];
+function showMotivation(){
+  const el = document.getElementById("motivation");
+  if(!el) return;
+  el.textContent = quotes[Math.floor(Math.random()*quotes.length)];
+}
+setInterval(showMotivation, 15000);
+
+// init
+window.onload = function(){
+  // migrate older storage shapes if needed
+  // ensure dailyProgress shape
+  if(!Array.isArray(dailyProgress)) dailyProgress = [];
+
+  updateUI();
+  showMotivation();
+};
