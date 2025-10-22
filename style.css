@@ -21,7 +21,14 @@ body{background:radial-gradient(circle at top,#0b0b1a,#000);color:#e0f7ff;min-he
 .xp-bar .progress-fill{background:linear-gradient(90deg,#00d8ff,#0077aa);box-shadow:0 0 10px #00d8ff;}
 .total-bar{margin:15px 0;padding:15px;background:rgba(20,30,50,0.9);border-radius:15px;box-shadow:0 0 20px rgba(0,216,255,0.4);border:1px solid rgba(0,216,255,0.4);}
 .total-bar strong{display:block;margin-bottom:6px;color:#00d8ff;text-shadow:0 0 6px #00aaff;}
-#bottomButtons{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);background:#0d1b2a;padding:15px 0;display:flex;justify-content:center;gap:15px;box-shadow:0 -2px 20px rgba(0,216,255,0.3);z-index:1000;border-top:1px solid rgba(0,216,255,0.2);}
+/* Remove previous fixed positioning */
+#bottomButtons {
+  text-align: center;
+  margin: 40px 0;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
 .achievements{
   display:flex;
   flex-wrap:wrap;
