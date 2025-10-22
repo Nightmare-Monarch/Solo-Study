@@ -2,47 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Solo Study Tracker</title>
+  <title>🗡️ Solo Study Tracker</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>SOLO STUDY TRACKER</h1>
-    <div class="top-buttons">
-      <button onclick="openHistory()">📜 History</button>
-      <button onclick="openStopwatch()">⏱️ Stopwatch</button>
-    </div>
-  </header>
+  <div class="container">
 
-  <section class="motivation">
-    <h2>💪 Stay Consistent!</h2>
-    <p id="motivationText">Every step counts toward your goal.</p>
-  </section>
+    <h1 class="title">🗡️ Solo Study Tracker</h1>
 
-  <section id="subjects"></section>
+    <!-- Motivation -->
+    <div class="motivation">
+      <p id="motivationQuote">“Study hard, shine later!”</p>
+    </div>
 
-  <div class="total-section">
-    <h2>Total Progress</h2>
-    <div class="bar-container">
-      <div class="bar-label">Total Marks</div>
-      <div class="mark-bar"><div id="totalMarkBar" class="fill"></div></div>
+    <!-- Top menu -->
+    <div class="menu top-menu">
+      <a href="history.html" class="menu-btn curved-btn">📜 History</a>
+      <a href="stopwatch.html" class="menu-btn curved-btn">⏱️ Stopwatch</a>
+      <a href="summary.html" class="menu-btn curved-btn">📈 Progress</a>
     </div>
-    <div class="bar-container">
-      <div class="bar-label">Total XP</div>
-      <div class="xp-bar"><div id="totalXPBar" class="fill"></div></div>
+
+    <!-- Input section -->
+    <div class="input-section">
+      <input id="sessionInput" placeholder="e.g. sin 1h 30m pp q">
+      <button class="btn curved-btn" onclick="handleSessionInput()">Add Session</button>
     </div>
+
+    <!-- Subjects -->
+    <div id="subjectContainer" class="subjects"></div>
+
+    <!-- Total Marks & XP -->
+    <div class="total-bar">
+      <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
+      <div class="progress full-marks">
+        <div id="fullMarksFill" class="progress-fill"></div>
+      </div>
+      <strong>Total XP: <span id="totalXPBottom">0</span></strong>
+      <div class="progress full-xp">
+        <div id="fullXPFill" class="progress-fill"></div>
+      </div>
+    </div>
+
   </div>
 
-  <div class="session-input">
-    <input type="text" id="sessionInput" placeholder="Add study session...">
-    <button onclick="addSession()">Add</button>
-  </div>
-
-  <div class="bottom-buttons">
-    <button onclick="undo()">Undo</button>
-    <button onclick="redo()">Redo</button>
-    <button onclick="resetAll()">Reset All</button>
+  <!-- Fixed bottom buttons -->
+  <div id="bottomButtons">
+    <button class="btn curved-btn" onclick="undo()">Undo</button>
+    <button class="btn curved-btn" onclick="redo()">Redo</button>
+    <button class="btn curved-btn" onclick="resetAll()">Reset All</button>
   </div>
 
   <script src="script.js"></script>

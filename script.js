@@ -1,84 +1,83 @@
-let subjects = [
-  { name: "Math", marks: 0, xp: 0 },
-  { name: "Science", marks: 0, xp: 0 },
-  { name: "English", marks: 0, xp: 0 },
-  { name: "History", marks: 0, xp: 0 },
-  { name: "ICT", marks: 0, xp: 0 }
+let subjects = JSON.parse(localStorage.getItem("subjects")) || [
+  { name: "Sinhala", code: "sin", marks: 0, xp: 0 },
+  { name: "Science", code: "sci", marks: 0, xp: 0 },
+  { name: "Commerce", code: "com", marks: 0, xp: 0 },
+  { name: "Buddhism", code: "bud", marks: 0, xp: 0 },
+  { name: "History", code: "his", marks: 0, xp: 0 },
+  { name: "Dancing", code: "dan", marks: 0, xp: 0 },
+  { name: "Health", code: "hea", marks: 0, xp: 0 },
+  { name: "Maths", code: "mat", marks: 0, xp: 0 },
+  { name: "English", code: "eng", marks: 0, xp: 0 }
 ];
 
-let totalMarks = 0;
-let totalXP = 0;
-let history = [];
-let future = [];
+let sessionHistory = JSON.parse(localStorage.getItem("sessionHistory")) || [];
+let redoHistory = JSON.parse(localStorage.getItem("redoHistory")) || [];
 
-function renderSubjects() {
-  const section = document.getElementById("subjects");
-  section.innerHTML = "";
-  subjects.forEach((sub, i) => {
-    section.innerHTML += `
-      <div class="bar-container">
-        <h3>${sub.name}</h3>
-        <div class="mark-bar"><div class="fill" style="width:${sub.marks / 1000 * 100}%"></div></div>
-        <div class="xp-bar"><div class="fill" style="width:${sub.xp / 750 * 100}%"></div></div>
-      </div>
-    `;
+function saveData() {
+  localStorage.setItem("subjects", JSON.stringify(subjects));
+  localStorage.setItem("sessionHistory", JSON.stringify(sessionHistory));
+  localStorage.setItem("redoHistory", JSON.stringify(redoHistory));
+}
+
+// Update UI
+function updateUI(){
+  const container = document.getElementById("subjectContainer");
+  container.innerHTML = "";
+  subjects.forEach((s,index)=>{
+    container.innerHTML+=`
+      <div class="subject">
+        <strong>${index+1}. ${s.name}</strong> - Marks: ${s.marks.toFixed(1)}
+        <div class="progress marks-bar"><div class="progress-fill" style="width:${s.marks/15*100}%;"></div></div>
+        <div class="progress xp-bar"><div class="progress-fill" style="width:${s.xp>100?100:s.xp}%;"></div></div>
+      </div>`;
   });
-
-  document.getElementById("totalMarkBar").style.width = `${(totalMarks / 1000) * 100}%`;
-  document.getElementById("totalXPBar").style.width = `${(totalXP / 100000) * 100}%`;
+  const totalMarks = subjects.reduce((a,b)=>a+b.marks,0);
+  const totalXP = subjects.reduce((a,b)=>a+b.xp,0);
+  document.getElementById("totalMarksBottom").textContent = totalMarks.toFixed(1);
+  document.getElementById("fullMarksFill").style.width = (totalMarks/900*100).toFixed(1)+"%";
+  document.getElementById("totalXPBottom").textContent = totalXP.toFixed(1);
+  document.getElementById("fullXPFill").style.width = (totalXP/100000*100).toFixed(1)+"%";
 }
 
-function addSession() {
-  const input = document.getElementById("sessionInput");
-  const text = input.value.trim();
-  if (text === "") return;
-
-  saveHistory();
-
-  const hours = 1;
-  const gainedMarks = (hours / 15) * 100;
-  const gainedXP = gainedMarks * 50;
-
-  subjects.forEach(sub => {
-    sub.marks += gainedMarks;
-    sub.xp += gainedXP / 5;
-  });
-
-  totalMarks += gainedMarks;
-  totalXP += gainedXP;
-
-  input.value = "";
-  renderSubjects();
+// Handle Session Input
+function handleSessionInput(){
+  const input = document.getElementById("sessionInput").value.trim().toLowerCase();
+  if(!input) return;
+  const parts = input.split(" ");
+  const code = parts[0];
+  let minutes=0, pp=false, quiz=false;
+  for(let i=1;i<parts.length;i++){
+    let p=parts[i];
+    if(p.endsWith("h")) minutes += (parseInt(p)||0)*60;
+    else if(p.endsWith("m")) minutes += parseInt(p)||0;
+    else if(p==="pp") pp=true;
+    else if(p==="q") quiz=true;
+  }
+  sessionHistory.push(JSON.stringify(subjects));
+  redoHistory=[];
+  addSession(code,minutes,pp,quiz);
+  document.getElementById("sessionInput").value="";
+  saveData();
 }
 
-function saveHistory() {
-  history.push(JSON.parse(JSON.stringify(subjects)));
-  future = [];
+function addSession(code,minutes,pp,quiz){
+  const sub = subjects.find(s=>s.code===code);
+  if(!sub) return alert("Invalid subject code");
+  let xpGain = minutes*(750/900); if(pp) xpGain+=5; if(quiz) xpGain+=3;
+  sub.xp += xpGain;
+  let marksGain = minutes*(100/15); if(pp) marksGain+=5; if(quiz) marksGain+=3;
+  sub.marks += marksGain; if(sub.marks>100) sub.marks=100;
+  updateUI();
 }
 
-function undo() {
-  if (history.length === 0) return;
-  future.push(JSON.parse(JSON.stringify(subjects)));
-  subjects = history.pop();
-  renderSubjects();
-}
+// Undo/Redo/Reset
+function undo(){ if(sessionHistory.length===0) return; redoHistory.push(JSON.stringify(subjects)); subjects=JSON.parse(sessionHistory.pop()); updateUI(); saveData();}
+function redo(){ if(redoHistory.length===0) return; sessionHistory.push(JSON.stringify(subjects)); subjects=JSON.parse(redoHistory.pop()); updateUI(); saveData();}
+function resetAll(){ if(!confirm("Are you sure?")) return; subjects.forEach(s=>{s.marks=0;s.xp=0;}); sessionHistory=[]; redoHistory=[]; saveData(); updateUI();}
 
-function redo() {
-  if (future.length === 0) return;
-  history.push(JSON.parse(JSON.stringify(subjects)));
-  subjects = future.pop();
-  renderSubjects();
-}
+// Motivation
+const quotes=["Stay focused and never give up!","Consistency is key to mastery.","Every hour counts, keep going!","Your future self will thank you.","Small steps lead to big progress."];
+function showMotivation(){ document.getElementById("motivationQuote").textContent=quotes[Math.floor(Math.random()*quotes.length)]; }
+setInterval(showMotivation,15000);
 
-function resetAll() {
-  if (!confirm("Are you sure to reset all progress?")) return;
-  subjects.forEach(sub => { sub.marks = 0; sub.xp = 0; });
-  totalMarks = 0;
-  totalXP = 0;
-  renderSubjects();
-}
-
-function openHistory() { alert("History page coming soon!"); }
-function openStopwatch() { alert("Stopwatch page coming soon!"); }
-
-renderSubjects();
+window.onload = ()=>{ updateUI(); showMotivation(); };

@@ -11,10 +11,27 @@
     <h1 class="title">📜 Study History</h1>
     <div id="historyContainer" class="history-list"></div>
     <div class="history-actions">
-      <button class="btn" onclick="clearHistory()">Clear All</button>
-      <a href="index.html" class="menu-btn">🏠 Back</a>
+      <button class="btn curved-btn" onclick="clearHistory()">Clear All</button>
+      <a href="index.html" class="menu-btn curved-btn">🏠 Back</a>
     </div>
   </div>
-  <script src="history.js"></script>
+  <script>
+    function loadHistory(){
+      const container=document.getElementById("historyContainer");
+      container.innerHTML="";
+      let history=JSON.parse(localStorage.getItem("sessionHistory")||"[]");
+      history.forEach((item,i)=>{
+        let div=document.createElement("div");
+        div.textContent=`Session ${i+1}`;
+        let del=document.createElement("button");
+        del.textContent="Delete";
+        del.onclick=()=>{ history.splice(i,1); localStorage.setItem("sessionHistory",JSON.stringify(history)); loadHistory(); };
+        div.appendChild(del);
+        container.appendChild(div);
+      });
+    }
+    function clearHistory(){ localStorage.removeItem("sessionHistory"); loadHistory(); }
+    window.onload=loadHistory;
+  </script>
 </body>
 </html>

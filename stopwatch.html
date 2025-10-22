@@ -2,38 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Stopwatch</title>
+  <title>⏱️ Study Stopwatch</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
-    <h1 class="title">⏱️ Stopwatch</h1>
+    <h1 class="title">⏱️ Study Stopwatch</h1>
 
-    <div id="display" class="countdown">00:00:00</div>
-    <div class="stopwatch-controls">
-      <button class="btn" onclick="startStopwatch()">Start</button>
-      <button class="btn" onclick="pauseStopwatch()">Pause</button>
-      <button class="btn" onclick="resetStopwatch()">Reset</button>
+    <div class="stopwatch-section">
+      <div id="stopwatchDisplay" class="countdown">00:00:00</div>
+      <div class="stopwatch-buttons">
+        <button class="btn curved-btn" onclick="startStopwatch()">Start</button>
+        <button class="btn curved-btn" onclick="pauseStopwatch()">Pause</button>
+        <button class="btn curved-btn" onclick="resetStopwatch()">Reset</button>
+      </div>
     </div>
 
-    <div class="input-section">
-      <select id="subjectSelect">
-        <option value="sin">Sinhala</option>
-        <option value="sci">Science</option>
-        <option value="com">Commerce</option>
-        <option value="bud">Buddhism</option>
-        <option value="his">History</option>
-        <option value="dan">Dancing</option>
-        <option value="hea">Health</option>
-        <option value="mat">Maths</option>
-        <option value="eng">English</option>
-      </select>
-      <button class="btn" onclick="submitStopwatchSession()">Submit Session</button>
-    </div>
-
-    <a href="index.html" class="menu-btn">🏠 Back</a>
+    <a href="index.html" class="menu-btn curved-btn">🏠 Back</a>
   </div>
 
-  <script src="stopwatch.js"></script>
+  <script>
+    let stopwatchInterval;
+    let totalSeconds = 0;
+    let running = false;
+
+    function updateDisplay() {
+      let h = Math.floor(totalSeconds / 3600);
+      let m = Math.floor((totalSeconds % 3600) / 60);
+      let s = totalSeconds % 60;
+      document.getElementById("stopwatchDisplay").textContent =
+        `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    }
+
+    function startStopwatch() {
+      if(running) return;
+      running = true;
+      stopwatchInterval = setInterval(() => {
+        totalSeconds++;
+        updateDisplay();
+      }, 1000);
+    }
+
+    function pauseStopwatch() {
+      running = false;
+      clearInterval(stopwatchInterval);
+    }
+
+    function resetStopwatch() {
+      running = false;
+      clearInterval(stopwatchInterval);
+      totalSeconds = 0;
+      updateDisplay();
+    }
+  </script>
 </body>
 </html>
