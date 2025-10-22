@@ -1,65 +1,185 @@
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  font-family: 'Orbitron', sans-serif;
-  background: #1e1e2f;
-  color: #fff;
-  min-height: 100vh;
-  padding-bottom: 120px; /* space for bottom buttons */
-}
-.container {
-  width: 100%;
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 20px;
-}
-.title { text-align:center; font-size:3rem; color:#00d8ff; margin-bottom:15px; }
-.motivation { text-align:center; font-size:1.2rem; margin-bottom:15px; color:#00d8ff; }
-.top-menu { display:flex; justify-content:center; gap:15px; margin-bottom:15px; }
-.menu-btn { text-decoration:none; color:#fff; font-weight:bold; padding:10px 20px; }
-.input-section { display:flex; justify-content:center; margin-bottom:20px; }
-.input-section input {
-  flex:1;
-  padding:12px 20px;
-  border-radius:25px 0 0 25px;
-  border:none;
-  outline:none;
-  background:#1b1b2a;
-  color:#fff;
-}
-.btn { padding:12px 20px; border:none; font-weight:bold; cursor:pointer; transition:0.3s; }
-.curved-btn { border-radius:25px; background: linear-gradient(90deg,#00d8ff,#0077aa); }
-.curved-btn:hover { background: linear-gradient(90deg,#0077aa,#00d8ff); }
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-/* Subjects */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Orbitron', sans-serif;
+}
+
+body {
+  background: radial-gradient(circle at top, #0b0b1a, #000);
+  color: #e0f7ff;
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-bottom: 130px;
+}
+
+/* Title */
+.title {
+  text-align: center;
+  font-size: 3rem;
+  color: #00d8ff;
+  text-shadow: 0 0 10px #00d8ff, 0 0 20px #00aaff;
+  margin-top: 20px;
+  letter-spacing: 2px;
+}
+
+/* Motivation */
+.motivation {
+  text-align: center;
+  font-size: 1.2rem;
+  margin: 15px 0;
+  color: #00d8ff;
+  text-shadow: 0 0 8px #00aaff;
+}
+
+/* Menu Buttons */
+.top-menu {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.menu-btn {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 25px;
+  background: linear-gradient(90deg, #0077aa, #00d8ff);
+  box-shadow: 0 0 10px #00d8ff;
+  transition: 0.3s;
+}
+
+.menu-btn:hover {
+  background: linear-gradient(90deg, #00d8ff, #0077aa);
+  box-shadow: 0 0 20px #00d8ff, 0 0 40px #00aaff;
+}
+
+/* Input Section */
+.input-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.input-section input {
+  flex: 1;
+  max-width: 400px;
+  padding: 12px 20px;
+  border-radius: 30px 0 0 30px;
+  border: none;
+  outline: none;
+  background: #0d1b2a;
+  color: #00d8ff;
+  font-weight: bold;
+  box-shadow: inset 0 0 10px #003366;
+}
+
+.btn {
+  padding: 12px 20px;
+  border: none;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.curved-btn {
+  border-radius: 30px;
+  background: linear-gradient(90deg, #00aaff, #0077aa);
+  box-shadow: 0 0 15px #00d8ff;
+}
+
+.curved-btn:hover {
+  background: linear-gradient(90deg, #00d8ff, #0077aa);
+  box-shadow: 0 0 25px #00e6ff, 0 0 50px #0099ff;
+}
+
+/* Subject Boxes */
 .subjects .subject {
-  background: #1b1b2a;
-  padding:15px;
-  margin:12px 0;
-  border-radius:15px;
-  box-shadow:0 0 10px rgba(0,216,255,0.3);
-  opacity:0;
-  transform: translateY(20px);
+  background: rgba(10, 20, 35, 0.9);
+  padding: 15px;
+  margin: 12px 0;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 216, 255, 0.3);
+  border: 1px solid rgba(0, 216, 255, 0.3);
+  opacity: 0;
+  transform: translateY(15px);
   animation: fadeInUp 0.6s forwards;
 }
-@keyframes fadeInUp { to { opacity:1; transform:translateY(0);} }
-.subject strong { font-size:1.2rem; color:#00d8ff; }
-.progress { width:100%; height:14px; background: rgba(255,255,255,0.1); border-radius:10px; margin:8px 0; }
-.progress-fill { height:100%; border-radius:10px; transition: width 0.8s ease-in-out; }
-.xp-bar .progress-fill { background: linear-gradient(90deg,#00d8ff,#0077aa); }
-.marks-bar .progress-fill { background: linear-gradient(90deg,#ff7f50,#ff4500); }
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.subject strong {
+  font-size: 1.2rem;
+  color: #00d8ff;
+  text-shadow: 0 0 8px #00aaff;
+}
+
+.progress {
+  width: 100%;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin: 8px 0;
+  overflow: hidden;
+  box-shadow: inset 0 0 6px #004466;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.8s ease-in-out;
+}
+
+.xp-bar .progress-fill {
+  background: linear-gradient(90deg, #00d8ff, #0077aa);
+  box-shadow: 0 0 10px #00d8ff;
+}
+
+.marks-bar .progress-fill {
+  background: linear-gradient(90deg, #ff7f50, #ff4500);
+  box-shadow: 0 0 10px #ff7f50;
+}
 
 /* Total Bar */
-.total-bar { margin:15px 0; padding:10px; background:#222233; border-radius:15px; box-shadow:0 0 15px rgba(0,216,255,0.3);}
-.total-bar strong { display:block; margin-bottom:5px; color:#00d8ff; }
-.full-marks .progress-fill { background: linear-gradient(90deg,#ff7f50,#ff4500); }
-.full-xp .progress-fill { background: linear-gradient(90deg,#00d8ff,#0077aa); }
+.total-bar {
+  margin: 15px 0;
+  padding: 15px;
+  background: rgba(20, 30, 50, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 216, 255, 0.4);
+  border: 1px solid rgba(0, 216, 255, 0.4);
+}
 
-/* Bottom buttons */
+.total-bar strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #00d8ff;
+  text-shadow: 0 0 6px #00aaff;
+}
+
+/* Bottom Buttons */
 #bottomButtons {
-  position:fixed; bottom:0; left:0; width:100%;
-  background:#222233;
-  padding:15px 0;
-  display:flex; justify-content:center; gap:15px;
-  box-shadow:0 -2px 10px rgba(0,0,0,0.5);
-  z-index:1000;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #0d1b2a;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  box-shadow: 0 -2px 20px rgba(0, 216, 255, 0.3);
+  z-index: 1000;
+  border-top: 1px solid rgba(0, 216, 255, 0.2);
 }
