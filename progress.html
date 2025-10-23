@@ -10,29 +10,27 @@
   <div class="container">
     <h1 class="title">📊 Study Progress</h1>
 
-    <!-- Total Marks and XP -->
+    <!-- Total XP -->
     <div class="total-bar">
-      <strong>Total Marks: <span id="totalMarksProgress">0</span> / 900</strong>
-      <div class="progress full-marks">
-        <div id="progressMarksFill" class="progress-fill"></div>
-      </div>
-
-      <strong>Total XP: <span id="totalXPProgress">0</span> / 50,000</strong>
+      <strong>Total XP: <span id="totalXP">0</span> / 50,000</strong>
       <div class="progress full-xp">
-        <div id="progressXPFill" class="progress-fill"></div>
+        <div id="totalXPFill" class="progress-fill"></div>
       </div>
     </div>
 
-    <!-- Subject Progress -->
-    <div id="progressSubjects"></div>
+    <!-- Subjects -->
+    <div id="subjectProgressContainer" class="subjects"></div>
 
-    <a href="index.html" class="menu-btn curved-btn" style="margin-top:20px;">🏠 Back</a>
+    <!-- Charts -->
+    <h2 class="subtitle">Weekly Hours (Last 7 Days)</h2>
+    <canvas id="weeklyChart" height="120"></canvas>
+
+    <h2 class="subtitle">Monthly Hours (Last 30 Days)</h2>
+    <canvas id="monthlyChart" height="120"></canvas>
+
+    <a href="index.html" class="menu-btn curved-btn">🏠 Back</a>
   </div>
 
-  <script src="script.js"></script>
-  <script>
-    // Call the progress update function
-    window.onload = updateProgressUI;
-  </script>
+  <script src="progress.js"></script>
 </body>
 </html>
