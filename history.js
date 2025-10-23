@@ -1,16 +1,49 @@
-function loadHistory(){
-  const container=document.getElementById("historyContainer");
-  container.innerHTML="";
-  let history=JSON.parse(localStorage.getItem("history")||"[]");
-  history.forEach((item,i)=>{
-    let div=document.createElement("div");
-    div.textContent=item;
-    let del=document.createElement("button");
-    del.textContent="Delete";
-    del.onclick=()=>{ history.splice(i,1); localStorage.setItem("history",JSON.stringify(history)); loadHistory(); };
-    div.appendChild(del);
-    container.appendChild(div);
+// Load history from localStorage
+const historyList = document.getElementById("historyList");
+const clearAllBtn = document.getElementById("clearAllBtn");
+
+// Get saved history or empty array
+let studyHistory = JSON.parse(localStorage.getItem("studyHistory")) || [];
+
+// Display all saved sessions
+function renderHistory() {
+  historyList.innerHTML = "";
+
+  if (studyHistory.length === 0) {
+    historyList.innerHTML = "<p>No study sessions yet.</p>";
+    return;
+  }
+
+  studyHistory.forEach((session, index) => {
+    const div = document.createElement("div");
+    div.classList.add("history-item");
+
+    const text = document.createElement("span");
+    // ✅ Fix: Use session.subject & session.duration properly
+    text.textContent = `${session.subject} — ${session.duration}`;
+
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "Remove";
+    removeBtn.classList.add("remove-btn");
+    removeBtn.addEventListener("click", () => {
+      studyHistory.splice(index, 1);
+      localStorage.setItem("studyHistory", JSON.stringify(studyHistory));
+      renderHistory();
+    });
+
+    div.appendChild(text);
+    div.appendChild(removeBtn);
+    historyList.appendChild(div);
   });
 }
-function clearHistory(){ localStorage.removeItem("history"); loadHistory(); }
-window.onload=loadHistory;
+
+// Clear all history
+clearAllBtn.addEventListener("click", () => {
+  if (confirm("Clear all study history?")) {
+    studyHistory = [];
+    localStorage.removeItem("studyHistory");
+    renderHistory();
+  }
+});
+
+renderHistory();

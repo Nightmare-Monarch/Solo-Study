@@ -1,157 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Study History</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Orbitron', sans-serif;
-      background: linear-gradient(135deg, #0b0f1a, #12203f);
+      background: #060b13;
       color: #fff;
+      font-family: "Orbitron", sans-serif;
       margin: 0;
       padding: 20px;
-      min-height: 100vh;
     }
 
     h1 {
       text-align: center;
-      color: #00bfff;
-      margin-bottom: 30px;
-      font-size: 28px;
-      text-shadow: 0 0 10px #0077ff;
+      margin-bottom: 20px;
+      color: #00eaff;
+      text-shadow: 0 0 10px #00eaff;
     }
 
-    .history-container {
-      max-width: 700px;
+    #historyList {
+      max-width: 600px;
       margin: 0 auto;
-      background: rgba(255,255,255,0.05);
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: 0 0 15px rgba(0,191,255,0.3);
     }
 
-    .session {
+    .history-item {
+      background: #0a0f1c;
+      color: white;
+      padding: 12px 18px;
+      margin: 10px 0;
+      border-radius: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 10px 15px;
-      margin-bottom: 12px;
-      transition: transform 0.2s ease;
+      box-shadow: 0 0 10px #00eaff33;
     }
 
-    .session:hover {
-      transform: scale(1.02);
-      background: rgba(0,191,255,0.15);
-    }
-
-    .session button {
-      background: #ff4444;
+    .remove-btn {
+      background: #ff2f2f;
       border: none;
       color: white;
-      font-family: 'Orbitron', sans-serif;
-      padding: 6px 12px;
+      padding: 5px 12px;
       border-radius: 8px;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: 0.2s;
+      font-family: "Orbitron", sans-serif;
     }
 
-    .session button:hover {
-      background: #ff6666;
+    .remove-btn:hover {
+      background: #ff5555;
     }
 
-    .clear-btn {
+    .clear-all-btn {
       display: block;
-      margin: 20px auto 0;
-      background: #007bff;
+      margin: 30px auto 0;
+      background: #00eaff;
+      color: black;
       border: none;
-      color: white;
-      padding: 10px 20px;
+      padding: 10px 25px;
       border-radius: 10px;
-      font-family: 'Orbitron', sans-serif;
       cursor: pointer;
-      transition: background 0.3s;
+      font-weight: bold;
+      font-family: "Orbitron", sans-serif;
+      transition: 0.3s;
     }
 
-    .clear-btn:hover {
-      background: #0099ff;
-    }
-
-    .no-data {
-      text-align: center;
-      opacity: 0.7;
-      margin-top: 30px;
-    }
-
-    a.back {
-      display: block;
-      text-align: center;
-      color: #00bfff;
-      margin-bottom: 20px;
-      text-decoration: none;
-      font-size: 16px;
-      transition: color 0.3s;
-    }
-
-    a.back:hover {
-      color: #66ccff;
+    .clear-all-btn:hover {
+      background: #33f1ff;
     }
   </style>
 </head>
 <body>
-
-  <a href="index.html" class="back">← Back to Main Page</a>
-  <h1>Study Session History</h1>
-
-  <div class="history-container" id="historyContainer"></div>
-
-  <button class="clear-btn" onclick="clearAllHistory()">Clear All</button>
+  <h1>Study History</h1>
+  <div id="historyList"></div>
+  <button id="clearAllBtn" class="clear-all-btn">Clear All</button>
 
   <script>
-    let sessionHistory = JSON.parse(localStorage.getItem("sessionHistory")) || [];
+    const historyList = document.getElementById("historyList");
+    const clearAllBtn = document.getElementById("clearAllBtn");
+
+    let studyHistory = JSON.parse(localStorage.getItem("studyHistory")) || [];
+    let subjects = JSON.parse(localStorage.getItem("subjects")) || [];
+    let totalXP = parseFloat(localStorage.getItem("totalXP")) || 0;
 
     function renderHistory() {
-      const container = document.getElementById("historyContainer");
-      container.innerHTML = "";
+      historyList.innerHTML = "";
 
-      if (sessionHistory.length === 0) {
-        container.innerHTML = `<p class='no-data'>No sessions recorded yet.</p>`;
+      if (studyHistory.length === 0) {
+        historyList.innerHTML = "<p style='text-align:center;'>No study sessions yet.</p>";
         return;
       }
 
-      sessionHistory.forEach((item, index) => {
-        const data = JSON.parse(item);
+      studyHistory.forEach((session, index) => {
         const div = document.createElement("div");
-        div.className = "session";
-        div.innerHTML = `
-          <div>
-            <strong>${data.subject}</strong> — ${data.duration} — <small>${data.date}</small>
-          </div>
-          <button onclick="removeSession(${index})">Remove</button>
-        `;
-        container.appendChild(div);
+        div.classList.add("history-item");
+
+        const text = document.createElement("span");
+        text.textContent = `${session.subject} — ${session.duration}`;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "Remove";
+        removeBtn.classList.add("remove-btn");
+
+        removeBtn.addEventListener("click", () => removeSession(index));
+        div.appendChild(text);
+        div.appendChild(removeBtn);
+        historyList.appendChild(div);
       });
     }
 
     function removeSession(index) {
-      sessionHistory.splice(index, 1);
-      localStorage.setItem("sessionHistory", JSON.stringify(sessionHistory));
+      const session = studyHistory[index];
+
+      if (!session) return;
+
+      // Calculate how many marks/xp were gained
+      const totalMinutes = session.totalMinutes || 0;
+      const hours = totalMinutes / 60;
+      const marksGained = (hours / 15) * 100; // 15 hours = 100 marks
+      const xpGained = hours * 50; // 1 hour = 50 XP
+
+      // Remove XP
+      totalXP -= xpGained;
+      if (totalXP < 0) totalXP = 0;
+      localStorage.setItem("totalXP", totalXP);
+
+      // Remove marks from the subject
+      const subject = subjects.find(s => s.name === session.subject);
+      if (subject) {
+        subject.marks -= marksGained;
+        if (subject.marks < 0) subject.marks = 0;
+      }
+
+      // Update storage
+      studyHistory.splice(index, 1);
+      localStorage.setItem("subjects", JSON.stringify(subjects));
+      localStorage.setItem("studyHistory", JSON.stringify(studyHistory));
+
       renderHistory();
     }
 
-    function clearAllHistory() {
-      if (confirm("Are you sure you want to clear all history?")) {
-        sessionHistory = [];
-        localStorage.setItem("sessionHistory", JSON.stringify(sessionHistory));
+    clearAllBtn.addEventListener("click", () => {
+      if (confirm("Clear all study history? This will also reset your XP and marks.")) {
+        localStorage.removeItem("studyHistory");
+        localStorage.removeItem("subjects");
+        localStorage.removeItem("totalXP");
+        studyHistory = [];
+        subjects = [];
+        totalXP = 0;
         renderHistory();
       }
-    }
+    });
 
     renderHistory();
   </script>
-
 </body>
 </html>
