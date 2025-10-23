@@ -12,7 +12,7 @@ body {
   color: #e0f7ff;
   min-height: 100vh;
   overflow-x: hidden;
-  padding-bottom: 100px;
+  padding-bottom: 150px;
 }
 
 /* Title */
@@ -22,6 +22,7 @@ body {
   color: #00d8ff;
   text-shadow: 0 0 10px #00d8ff, 0 0 20px #00aaff;
   margin-top: 20px;
+  letter-spacing: 2px;
 }
 
 /* Motivation */
@@ -33,12 +34,12 @@ body {
   text-shadow: 0 0 8px #00aaff;
 }
 
-/* Top Menu */
+/* Menu Buttons */
 .top-menu {
   display: flex;
   justify-content: center;
   gap: 15px;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .menu-btn {
@@ -69,7 +70,7 @@ body {
   flex: 1;
   max-width: 400px;
   padding: 12px 20px;
-  border-radius: 30px;
+  border-radius: 30px 0 0 30px; /* curved only on left side */
   border: none;
   outline: none;
   background: #0d1b2a;
@@ -78,7 +79,6 @@ body {
   box-shadow: inset 0 0 10px #003366;
 }
 
-/* Buttons */
 .btn {
   padding: 12px 20px;
   border: none;
@@ -99,35 +99,30 @@ body {
   box-shadow: 0 0 25px #00e6ff, 0 0 50px #0099ff;
 }
 
-/* Subjects */
+/* Subject Boxes */
 .subjects .subject {
   background: rgba(10, 20, 35, 0.9);
   padding: 15px;
-  margin: 15px auto;
+  margin: 12px auto;
   border-radius: 15px;
   box-shadow: 0 0 15px rgba(0, 216, 255, 0.3);
   border: 1px solid rgba(0, 216, 255, 0.3);
-  max-width: 600px;
-  opacity: 0;
-  transform: translateY(15px);
-  animation: fadeInUp 0.6s forwards;
-}
-
-@keyframes fadeInUp {
-  to { opacity: 1; transform: translateY(0); }
+  width: 90%;
 }
 
 .subject strong {
   font-size: 1.2rem;
   color: #00d8ff;
   text-shadow: 0 0 8px #00aaff;
+  display: block;
+  margin-bottom: 8px;
 }
 
 /* Progress Bars */
 .progress {
   width: 100%;
-  height: 16px;
-  background: rgba(255,255,255,0.1);
+  height: 18px;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   margin: 8px 0;
   overflow: hidden;
@@ -140,25 +135,30 @@ body {
   transition: width 0.8s ease-in-out;
 }
 
-.progress-fill.marks {
+.marks-bar .progress-fill {
   background: linear-gradient(90deg, #ff7f50, #ff4500);
   box-shadow: 0 0 10px #ff7f50;
 }
 
-.progress-fill.xp {
+.full-marks .progress-fill {
   background: linear-gradient(90deg, #00d8ff, #0077aa);
   box-shadow: 0 0 10px #00d8ff;
 }
 
+.full-xp .progress-fill {
+  background: linear-gradient(90deg, #00ff6a, #00aa33);
+  box-shadow: 0 0 10px #00ff6a;
+}
+
 /* Total Bar */
 .total-bar {
-  margin: 25px auto;
+  margin: 15px auto;
   padding: 15px;
   background: rgba(20, 30, 50, 0.9);
   border-radius: 15px;
   box-shadow: 0 0 20px rgba(0, 216, 255, 0.4);
   border: 1px solid rgba(0, 216, 255, 0.4);
-  max-width: 600px;
+  width: 90%;
 }
 
 .total-bar strong {
@@ -170,9 +170,11 @@ body {
 
 /* Bottom Buttons */
 #bottomButtons {
-  text-align: center;
-  margin: 50px 0;
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  justify-content: center;
   gap: 15px;
+  z-index: 1000;
 }

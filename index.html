@@ -15,13 +15,13 @@
       <p id="motivationQuote">“Study hard, shine later!”</p>
     </div>
 
-    <!-- Top Menu -->
+    <!-- Top menu -->
     <div class="menu top-menu">
       <a href="history.html" class="menu-btn curved-btn">📜 History</a>
       <a href="stopwatch.html" class="menu-btn curved-btn">⏱️ Stopwatch</a>
     </div>
 
-    <!-- Input Section -->
+    <!-- Input section -->
     <div class="input-section">
       <input id="sessionInput" placeholder="e.g. sin 1h 30m pp q">
       <button class="btn curved-btn" onclick="handleSessionInput()">Add Session</button>
@@ -30,25 +30,25 @@
     <!-- Subjects -->
     <div id="subjectContainer" class="subjects"></div>
 
-    <!-- Total Bar -->
+    <!-- Total Marks & XP Bar -->
     <div class="total-bar">
       <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
       <div class="progress full-marks">
-        <div id="fullMarksFill" class="progress-fill marks"></div>
+        <div id="fullMarksFill" class="progress-fill"></div>
       </div>
-      <strong>Total XP: <span id="totalXPBottom">0</span> / 100000</strong>
+      <strong>Total XP: <span id="totalXPBottom">0</span></strong>
       <div class="progress full-xp">
-        <div id="fullXPFill" class="progress-fill xp"></div>
+        <div id="fullXPFill" class="progress-fill"></div>
       </div>
     </div>
 
-    <!-- Bottom Buttons (only at the end) -->
-    <div id="bottomButtons">
-      <button class="btn curved-btn" onclick="undo()">Undo</button>
-      <button class="btn curved-btn" onclick="redo()">Redo</button>
-      <button class="btn curved-btn" onclick="resetAll()">Reset All</button>
-    </div>
+  </div>
 
+  <!-- Fixed bottom buttons -->
+  <div id="bottomButtons">
+    <button class="btn curved-btn" onclick="undo()">Undo</button>
+    <button class="btn curved-btn" onclick="redo()">Redo</button>
+    <button class="btn curved-btn" onclick="resetAll()">Reset All</button>
   </div>
 
   <script src="script.js"></script>

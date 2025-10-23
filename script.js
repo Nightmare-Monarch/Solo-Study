@@ -1,35 +1,25 @@
 let subjects = JSON.parse(localStorage.getItem("subjects")) || [
-  { name: "Sinhala", code: "sin", marks: 69, xp: 0 },
-  { name: "Science", code: "sci", marks: 67, xp: 0 },
-  { name: "Commerce", code: "com", marks: 82, xp: 0 },
-  { name: "Buddhism", code: "bud", marks: 95, xp: 0 },
-  { name: "History", code: "his", marks: 86, xp: 0 },
-  { name: "Dancing", code: "dan", marks: 73, xp: 0 },
-  { name: "Health", code: "hea", marks: 90, xp: 0 },
-  { name: "Maths", code: "mat", marks: 90, xp: 0 },
-  { name: "English", code: "eng", marks: 82, xp: 0 }
+  { name: "Sinhala", code: "sin", marks: 0 },
+  { name: "Science", code: "sci", marks: 0 },
+  { name: "Commerce", code: "com", marks: 0 },
+  { name: "Buddhism", code: "bud", marks: 0 },
+  { name: "History", code: "his", marks: 0 },
+  { name: "Dancing", code: "dan", marks: 0 },
+  { name: "Health", code: "hea", marks: 0 },
+  { name: "Maths", code: "mat", marks: 0 },
+  { name: "English", code: "eng", marks: 0 }
 ];
 
 let sessionHistory = JSON.parse(localStorage.getItem("sessionHistory")) || [];
 let redoHistory = JSON.parse(localStorage.getItem("redoHistory")) || [];
+let totalXP = parseFloat(localStorage.getItem("totalXP")) || 0;
 
+// Save data
 function saveData() {
   localStorage.setItem("subjects", JSON.stringify(subjects));
   localStorage.setItem("sessionHistory", JSON.stringify(sessionHistory));
   localStorage.setItem("redoHistory", JSON.stringify(redoHistory));
-}
-
-// Animate numbers smoothly
-function animateNumber(element, start, end, duration=800) {
-  const range = end - start;
-  let startTime = null;
-  function step(time) {
-    if(!startTime) startTime = time;
-    let progress = Math.min((time - startTime)/duration,1);
-    element.textContent = (start + range*progress).toFixed(1);
-    if(progress<1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
+  localStorage.setItem("totalXP", totalXP);
 }
 
 // Update UI
@@ -37,112 +27,113 @@ function updateUI() {
   const container = document.getElementById("subjectContainer");
   container.innerHTML = "";
 
-  subjects.sort((a,b)=>b.marks - a.marks); // Sort by marks
-
-  subjects.forEach((s,index)=>{
+  subjects.forEach((s, index) => {
     container.innerHTML += `
       <div class="subject">
-        <strong>${index+1}. ${s.name}</strong> - Marks: <span class="marks-value">${s.marks.toFixed(1)}</span>
+        <strong>${index + 1}. ${s.name}</strong> - Marks: ${s.marks.toFixed(1)}
         <div class="progress marks-bar">
-          <div class="progress-fill" style="width:${(s.marks/100*100).toFixed(1)}%"></div>
+          <div class="progress-fill" style="width:${(s.marks).toFixed(1)}%"></div>
         </div>
-      </div>`;
+      </div>
+    `;
   });
 
-  // Update total marks bottom bar
-  const totalMarks = subjects.reduce((a,b)=>a+b.marks,0);
-  const maxMarks = 900; // total possible marks
-  const totalMarksEl = document.getElementById("totalMarksBottom");
-  if(totalMarksEl) animateNumber(totalMarksEl, parseFloat(totalMarksEl.textContent)||0, totalMarks);
-  const fill = document.getElementById("fullMarksFill");
-  if(fill) fill.style.width = (totalMarks/maxMarks*100).toFixed(1) + "%";
+  const totalMarks = subjects.reduce((a, b) => a + b.marks, 0);
+  document.getElementById("totalMarksBottom").textContent = totalMarks.toFixed(1);
+  document.getElementById("fullMarksFill").style.width = (totalMarks / 900 * 100).toFixed(1) + "%";
+
+  document.getElementById("totalXPBottom").textContent = totalXP.toFixed(1);
+  document.getElementById("fullXPFill").style.width = Math.min(totalXP / 750 * 100, 100).toFixed(1) + "%";
 }
 
-// Handle session input like "sci 1h 34m pp q 2h"
+// Add session
 function handleSessionInput() {
   const input = document.getElementById("sessionInput").value.trim().toLowerCase();
-  if(!input) return;
+  if (!input) return;
 
   const parts = input.split(" ");
-  const subjectCode = parts[0];
-  let totalMinutes = 0;
-  let isPP = false, isQuiz = false;
+  const code = parts[0];
+  let minutes = 0, pp = false, quiz = false;
 
-  for(let i=1;i<parts.length;i++){
-    let p = parts[i];
-    if(p.endsWith("h")) totalMinutes += (parseInt(p)||0)*60;
-    else if(p.endsWith("m")) totalMinutes += parseInt(p)||0;
-    else if(p === "pp") isPP = true;
-    else if(p === "q") isQuiz = true;
+  for (let i = 1; i < parts.length; i++) {
+    const p = parts[i];
+    if (p.endsWith("h")) minutes += (parseInt(p) || 0) * 60;
+    else if (p.endsWith("m")) minutes += parseInt(p) || 0;
+    else if (p === "pp") pp = true;
+    else if (p === "q") quiz = true;
   }
 
-  sessionHistory.push(JSON.stringify(subjects));
+  const sub = subjects.find(s => s.code === code);
+  if (!sub) return alert("Invalid subject code");
+
+  // Save current state for undo
+  sessionHistory.push(JSON.stringify({ subjects, totalXP }));
   redoHistory = [];
 
-  addSession(subjectCode,totalMinutes,isPP,isQuiz);
-  document.getElementById("sessionInput").value="";
-  saveData();
-}
+  // Marks: 15h = 100 marks → 1min = 100 / 900
+  const marksGain = minutes * (100 / 900) + (pp ? 5 : 0) + (quiz ? 3 : 0);
+  sub.marks += marksGain;
+  if (sub.marks > 100) sub.marks = 100;
 
-// Add session XP & marks
-function addSession(subjectCode,totalMinutes,isPP,isQuiz){
-  const subject = subjects.find(s=>s.code===subjectCode);
-  if(!subject) return alert("Invalid subject code");
+  // XP: 1h = 50 XP → 1min = 50/60
+  const xpGain = minutes * (50 / 60) + (pp ? 5 : 0) + (quiz ? 3 : 0);
+  totalXP += xpGain;
 
-  // XP calculation: 1 hour = 50 XP
-  let xpGain = (totalMinutes/60)*50;
-  if(isPP) xpGain += 10; // practice problems bonus
-  if(isQuiz) xpGain += 5; // quiz bonus
-
-  subject.xp += xpGain;
-
-  // Convert XP to marks: 15 hours = 100 marks
-  let marksGain = (totalMinutes/60)*(100/15);
-  subject.marks += marksGain;
-
-  // Prevent marks exceeding 100
-  if(subject.marks>100) subject.marks=100;
-
-  // Save session for history.html
-  let sessionData = {
-    subject: subject.name,
-    duration: `${Math.floor(totalMinutes/60)}h ${totalMinutes%60}m`,
-    date: new Date().toLocaleDateString()
-  };
-  let historyList = JSON.parse(localStorage.getItem("sessionHistory")) || [];
-  historyList.push(JSON.stringify(sessionData));
-  localStorage.setItem("sessionHistory", JSON.stringify(historyList));
+  document.getElementById("sessionInput").value = "";
 
   updateUI();
   saveData();
 }
 
-// Undo / Redo
-function undo(){
-  if(sessionHistory.length===0) return alert("Nothing to undo");
-  redoHistory.push(JSON.stringify(subjects));
-  subjects = JSON.parse(sessionHistory.pop());
+// Undo / Redo / Reset
+function undo() {
+  if (sessionHistory.length === 0) return;
+  redoHistory.push(JSON.stringify({ subjects, totalXP }));
+  const lastState = JSON.parse(sessionHistory.pop());
+  subjects = lastState.subjects;
+  totalXP = lastState.totalXP;
   updateUI();
   saveData();
 }
 
-function redo(){
-  if(redoHistory.length===0) return alert("Nothing to redo");
-  sessionHistory.push(JSON.stringify(subjects));
-  subjects = JSON.parse(redoHistory.pop());
+function redo() {
+  if (redoHistory.length === 0) return;
+  sessionHistory.push(JSON.stringify({ subjects, totalXP }));
+  const lastState = JSON.parse(redoHistory.pop());
+  subjects = lastState.subjects;
+  totalXP = lastState.totalXP;
   updateUI();
   saveData();
 }
 
-// Reset all subjects
-function resetAll(){
-  if(!confirm("Are you sure you want to reset all marks and XP?")) return;
-  subjects.forEach(s=>{s.marks=0; s.xp=0;});
-  sessionHistory=[];
-  redoHistory=[];
-  localStorage.removeItem("history");
-  saveData();
+function resetAll() {
+  if (!confirm("Are you sure you want to reset all marks and XP?")) return;
+  subjects.forEach(s => s.marks = 0);
+  totalXP = 0;
+  sessionHistory = [];
+  redoHistory = [];
   updateUI();
+  saveData();
 }
 
-window.onload = updateUI;
+// Enter key support
+document.getElementById("sessionInput").addEventListener("keypress", function(e){
+  if (e.key === "Enter") handleSessionInput();
+});
+
+// Motivation quotes
+const quotes = [
+  "Stay focused and never give up!",
+  "Consistency is key to mastery.",
+  "Every hour counts, keep going!",
+  "Your future self will thank you.",
+  "Small steps lead to big progress."
+];
+function showMotivation() {
+  document.getElementById("motivationQuote").textContent = quotes[Math.floor(Math.random() * quotes.length)];
+}
+setInterval(showMotivation, 15000);
+
+// Initial UI render
+updateUI();
+showMotivation();
