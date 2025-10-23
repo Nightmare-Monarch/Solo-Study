@@ -2,58 +2,156 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>📜 Study Progress Summary</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study History</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, #0b0f1a, #12203f);
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00bfff;
+      margin-bottom: 30px;
+      font-size: 28px;
+      text-shadow: 0 0 10px #0077ff;
+    }
+
+    .history-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0,191,255,0.3);
+    }
+
+    .session {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 10px 15px;
+      margin-bottom: 12px;
+      transition: transform 0.2s ease;
+    }
+
+    .session:hover {
+      transform: scale(1.02);
+      background: rgba(0,191,255,0.15);
+    }
+
+    .session button {
+      background: #ff4444;
+      border: none;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .session button:hover {
+      background: #ff6666;
+    }
+
+    .clear-btn {
+      display: block;
+      margin: 20px auto 0;
+      background: #007bff;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-family: 'Orbitron', sans-serif;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .clear-btn:hover {
+      background: #0099ff;
+    }
+
+    .no-data {
+      text-align: center;
+      opacity: 0.7;
+      margin-top: 30px;
+    }
+
+    a.back {
+      display: block;
+      text-align: center;
+      color: #00bfff;
+      margin-bottom: 20px;
+      text-decoration: none;
+      font-size: 16px;
+      transition: color 0.3s;
+    }
+
+    a.back:hover {
+      color: #66ccff;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
 
-    <h1 class="title">📜 Progress Summary</h1>
+  <a href="index.html" class="back">← Back to Main Page</a>
+  <h1>Study Session History</h1>
 
-    <div class="menu top-menu">
-      <a href="index.html" class="menu-btn curved-btn">🏠 Back to Home</a>
-    </div>
+  <div class="history-container" id="historyContainer"></div>
 
-    <div id="progressContainer" class="subjects"></div>
-
-    <div class="total-bar">
-      <strong>Total Marks: <span id="totalMarks">0</span> / 900</strong>
-      <div class="progress full-marks">
-        <div id="fullMarksFill" class="progress-fill marks"></div>
-      </div>
-
-      <strong>Total XP: <span id="totalXP">0</span> / 100000</strong>
-      <div class="progress full-xp">
-        <div id="fullXPFill" class="progress-fill xp"></div>
-      </div>
-    </div>
-
-  </div>
+  <button class="clear-btn" onclick="clearAllHistory()">Clear All</button>
 
   <script>
-    const subjects = JSON.parse(localStorage.getItem("subjects")) || [];
-    const totalXP = parseFloat(localStorage.getItem("totalXP")) || 0;
+    let sessionHistory = JSON.parse(localStorage.getItem("sessionHistory")) || [];
 
-    const container = document.getElementById("progressContainer");
-    subjects.sort((a, b) => b.marks - a.marks);
+    function renderHistory() {
+      const container = document.getElementById("historyContainer");
+      container.innerHTML = "";
 
-    subjects.forEach((s, i) => {
-      const div = document.createElement("div");
-      div.className = "subject";
-      div.innerHTML = `
-        <strong>${i + 1}. ${s.name}</strong> - Marks: ${s.marks.toFixed(1)}
-        <div class="progress marks-bar">
-          <div class="progress-fill marks" style="width:${s.marks}%;"></div>
-        </div>
-      `;
-      container.appendChild(div);
-    });
+      if (sessionHistory.length === 0) {
+        container.innerHTML = `<p class='no-data'>No sessions recorded yet.</p>`;
+        return;
+      }
 
-    const totalMarks = subjects.reduce((a, b) => a + b.marks, 0);
-    document.getElementById("totalMarks").textContent = totalMarks.toFixed(1);
-    document.getElementById("fullMarksFill").style.width = (totalMarks / 900 * 100) + "%";
-    document.getElementById("totalXP").textContent = totalXP.toFixed(0);
-    document.getElementById("fullXPFill").style.width = (totalXP / 100000 * 100) + "%";
+      sessionHistory.forEach((item, index) => {
+        const data = JSON.parse(item);
+        const div = document.createElement("div");
+        div.className = "session";
+        div.innerHTML = `
+          <div>
+            <strong>${data.subject}</strong> — ${data.duration} — <small>${data.date}</small>
+          </div>
+          <button onclick="removeSession(${index})">Remove</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function removeSession(index) {
+      sessionHistory.splice(index, 1);
+      localStorage.setItem("sessionHistory", JSON.stringify(sessionHistory));
+      renderHistory();
+    }
+
+    function clearAllHistory() {
+      if (confirm("Are you sure you want to clear all history?")) {
+        sessionHistory = [];
+        localStorage.setItem("sessionHistory", JSON.stringify(sessionHistory));
+        renderHistory();
+      }
+    }
+
+    renderHistory();
   </script>
+
 </body>
 </html>
