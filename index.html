@@ -16,27 +16,30 @@
     </div>
 
     <!-- Top menu -->
-    <div class="menu top-menu">
-      <a href="history.html" class="menu-btn curved-btn">📜 History</a>
-      <a href="stopwatch.html" class="menu-btn curved-btn">⏱️ Stopwatch</a>
-    </div>
+    <!-- Top menu -->
+<div class="menu top-menu">
+  <a href="history.html" class="menu-btn curved-btn">📜 History</a>
+  <a href="stopwatch.html" class="menu-btn curved-btn">⏱️ Stopwatch</a>
+  <a href="progress.html" class="menu-btn curved-btn">📊 Progress</a> <!-- NEW BUTTON -->
+</div>
+
 
     <!-- Input section -->
     <div class="input-section">
-      <input id="sessionInput" placeholder="e.g. sin 1h 30m pp q">
+      <input id="sessionInput" placeholder="e.g. sin 1h 30m pp q" onkeypress="if(event.key==='Enter'){handleSessionInput()}">
       <button class="btn curved-btn" onclick="handleSessionInput()">Add Session</button>
     </div>
 
     <!-- Subjects -->
     <div id="subjectContainer" class="subjects"></div>
 
-    <!-- Total Marks & XP Bar -->
+    <!-- Total Marks & XP -->
     <div class="total-bar">
       <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
       <div class="progress full-marks">
         <div id="fullMarksFill" class="progress-fill"></div>
       </div>
-      <strong>Total XP: <span id="totalXPBottom">0</span></strong>
+      <strong>Total XP: <span id="totalXPBottom">0</span> / 50,000</strong>
       <div class="progress full-xp">
         <div id="fullXPFill" class="progress-fill"></div>
       </div>

@@ -1,83 +1,79 @@
-// Load all sessions into history page
-function loadHistory() {
-  const container = document.getElementById("historyContainer");
-  container.innerHTML = "";
+let subjects = JSON.parse(localStorage.getItem("subjects")) || [];
+let sessionHistory = JSON.parse(localStorage.getItem("sessionHistory")) || [];
+let historyRecords = JSON.parse(localStorage.getItem("historyRecords")) || [];
 
-  // Get session history from localStorage
-  const sessions = JSON.parse(localStorage.getItem("sessionHistory")) || [];
-
-  sessions.forEach((session, index) => {
-    const subArray = JSON.parse(session); // Each session contains subjects array
-    subArray.forEach(sub => {
-      if (!sub.lastSession) return; // Skip if no session data
-
-      const div = document.createElement("div");
-      div.className = "history-row";
-      div.style.display = "flex";
-      div.style.justifyContent = "space-between";
-      div.style.marginBottom = "8px";
-      div.style.padding = "6px 10px";
-      div.style.background = "rgba(0, 216, 255, 0.1)";
-      div.style.borderRadius = "10px";
-      div.style.alignItems = "center";
-
-      div.innerHTML = `
-        <span>${sub.name}</span>
-        <span>${sub.lastSession.hours}h ${sub.lastSession.minutes}m</span>
-        <span>${sub.lastSession.marksGained.toFixed(1)}</span>
-        <span>${sub.lastSession.date}</span>
-        <button class="btn curved-btn" style="padding:2px 8px; font-size:0.8rem;">Remove</button>
-      `;
-
-      // Remove session
-      div.querySelector("button").onclick = () => {
-        removeSession(index, sub.code);
-      };
-
-      container.appendChild(div);
-    });
-  });
+function saveHistory() {
+    localStorage.setItem("subjects", JSON.stringify(subjects));
+    localStorage.setItem("sessionHistory", JSON.stringify(sessionHistory));
+    localStorage.setItem("historyRecords", JSON.stringify(historyRecords));
 }
 
-// Remove a session and update marks/xp in main page
-function removeSession(sessionIndex, code) {
-  const sessions = JSON.parse(localStorage.getItem("sessionHistory")) || [];
-  const subArray = JSON.parse(sessions[sessionIndex]);
+function formatTime(minutes) {
+    const h = Math.floor(minutes/60);
+    const m = minutes % 60;
+    return `${h>0 ? h+"h " : ""}${m}m`;
+}
 
-  const sub = subArray.find(s => s.code === code);
-  if (sub && sub.lastSession) {
-    // Subtract marks and XP gained in this session
-    const subjects = JSON.parse(localStorage.getItem("subjects")) || [];
-    const subjectToUpdate = subjects.find(s => s.code === code);
-    if (subjectToUpdate) {
-      subjectToUpdate.marks -= sub.lastSession.marksGained;
-      subjectToUpdate.xp -= sub.lastSession.xpGained;
-      if (subjectToUpdate.marks < 0) subjectToUpdate.marks = 0;
-      if (subjectToUpdate.xp < 0) subjectToUpdate.xp = 0;
+function loadHistory() {
+    const container = document.getElementById("historyContainer");
+    container.innerHTML = "";
+
+    if(historyRecords.length===0){
+        container.innerHTML = "<p style='text-align:center; margin:15px; color:#00d8ff;'>No sessions yet</p>";
+        return;
     }
-    localStorage.setItem("subjects", JSON.stringify(subjects));
-  }
 
-  // Remove session from history
-  sessions.splice(sessionIndex, 1);
-  localStorage.setItem("sessionHistory", JSON.stringify(sessions));
-  loadHistory();
+    historyRecords.forEach((rec, i)=>{
+        const row = document.createElement("div");
+        row.classList.add("history-row");
+        row.style.display="flex";
+        row.style.justifyContent="space-between";
+        row.style.alignItems="center";
+        row.style.padding="8px 12px";
+        row.style.borderBottom="1px solid rgba(0,216,255,0.2)";
+        row.style.maxWidth="600px";
+        row.style.margin="auto";
 
-  // Update main page UI
-  if (typeof updateUI === "function") updateUI();
+        row.innerHTML = `
+            <span>${rec.subject}</span>
+            <span>${formatTime(rec.minutes)}</span>
+            <span>${rec.marksGain.toFixed(1)}</span>
+            <span>${rec.date}</span>
+        `;
+
+        const delBtn = document.createElement("button");
+        delBtn.textContent="Remove";
+        delBtn.className="btn curved-btn";
+        delBtn.style.padding="4px 10px";
+        delBtn.style.fontSize="0.8rem";
+        delBtn.onclick = ()=>{
+            // Remove session marks/xp from main subjects
+            const sub = subjects.find(s=>s.code===rec.code);
+            if(sub){
+                sub.marks = Math.max(sub.marks - rec.marksGain, 0);
+                sub.xp = Math.max(sub.xp - rec.xpGain, 0);
+            }
+            historyRecords.splice(i,1);
+            saveHistory();
+            loadHistory();
+            // Update main page
+            localStorage.setItem("subjects", JSON.stringify(subjects));
+        };
+
+        row.appendChild(delBtn);
+        container.appendChild(row);
+    });
 }
 
 // Clear all history
-function clearHistory() {
-  if (!confirm("Are you sure?")) return;
-  localStorage.removeItem("sessionHistory");
-  loadHistory();
-
-  // Reset main page subjects
-  const subjects = JSON.parse(localStorage.getItem("subjects")) || [];
-  subjects.forEach(s => { s.marks = 0; s.xp = 0; });
-  localStorage.setItem("subjects", JSON.stringify(subjects));
-  if (typeof updateUI === "function") updateUI();
+function clearAllHistory(){
+    if(!confirm("Clear all history and reset marks/XP?")) return;
+    historyRecords=[];
+    subjects.forEach(s=>{s.marks=0; s.xp=0;});
+    saveHistory();
+    loadHistory();
+    localStorage.setItem("subjects", JSON.stringify(subjects));
 }
 
+// Load on start
 window.onload = loadHistory;
