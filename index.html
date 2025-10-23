@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <title>🗡️ Solo Study Tracker</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
-
     <h1 class="title">🗡️ Solo Study Tracker</h1>
 
     <!-- Motivation -->
@@ -18,8 +18,8 @@
     <!-- Top menu -->
     <div class="menu top-menu">
       <a href="history.html" class="menu-btn curved-btn">📜 History</a>
+      <a href="progress.html" class="menu-btn curved-btn">📈 Progress</a>
       <a href="stopwatch.html" class="menu-btn curved-btn">⏱️ Stopwatch</a>
-      <a href="progress.html" class="menu-btn curved-btn">📊 Progress</a>
     </div>
 
     <!-- Input section -->
@@ -31,25 +31,24 @@
     <!-- Subjects -->
     <div id="subjectContainer" class="subjects"></div>
 
-    <!-- Total Marks Bar -->
+    <!-- Total Marks & XP Bar -->
     <div class="total-bar">
       <strong>Total Marks: <span id="totalMarksBottom">0</span> / 900</strong>
       <div class="progress full-marks">
         <div id="fullMarksFill" class="progress-fill"></div>
       </div>
-      <strong>Total XP: <span id="totalXPBottom">0</span></strong>
+      <strong>Total XP: <span id="totalXPBottom">0</span> / 50000</strong>
       <div class="progress full-xp">
         <div id="fullXPFill" class="progress-fill"></div>
       </div>
     </div>
 
-  </div>
-
-  <!-- Fixed bottom buttons -->
-  <div id="bottomButtons">
-    <button class="btn curved-btn" onclick="undo()">Undo</button>
-    <button class="btn curved-btn" onclick="redo()">Redo</button>
-    <button class="btn curved-btn" onclick="resetAll()">Reset All</button>
+    <!-- Undo/Redo/Reset Buttons -->
+    <div id="bottomButtons">
+      <button class="btn curved-btn" onclick="undo()">Undo</button>
+      <button class="btn curved-btn" onclick="redo()">Redo</button>
+      <button class="btn curved-btn" onclick="resetAll()">Reset All</button>
+    </div>
   </div>
 
   <script src="script.js"></script>

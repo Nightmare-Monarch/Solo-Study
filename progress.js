@@ -1,81 +1,36 @@
-let subjects = JSON.parse(localStorage.getItem("subjects")) || [];
-let sessionRecords = JSON.parse(localStorage.getItem("sessionRecords")) || [];
+// Load daily progress
+let dailyProgress = JSON.parse(localStorage.getItem("dailyProgress")) || [];
+dailyProgress.sort((a,b)=> new Date(a.date) - new Date(b.date));
 
-function updateProgressUI(){
-  const container = document.getElementById("subjectProgressContainer");
-  container.innerHTML="";
+const labels = dailyProgress.map(d=>d.date);
+const hoursData = dailyProgress.map(d=>+(d.hours||0).toFixed(2));
+const marksData = dailyProgress.map(d=>+(d.marks||0).toFixed(1));
+const xpData = dailyProgress.map(d=>+(d.xp||0).toFixed(0));
 
-  subjects.forEach(s=>{
-    const div = document.createElement("div");
-    div.className="subject";
-    div.innerHTML = `
-      <strong>${s.name} - Marks: ${s.marks.toFixed(1)}/100</strong>
-      <div class="progress marks-bar">
-        <div class="progress-fill" style="width:${Math.min(s.marks,100)}%;"></div>
-      </div>
-    `;
-    container.appendChild(div);
+// Update total stats
+document.getElementById("totalHours").innerText = `${hoursData.reduce((a,b)=>a+b,0).toFixed(2)} h`;
+document.getElementById("totalMarks").innerText = marksData.reduce((a,b)=>a+b,0);
+document.getElementById("totalXP").innerText = xpData.reduce((a,b)=>a+b,0);
+
+// Chart function
+function createChart(ctx, label, data, type, color) {
+  return new Chart(ctx, {
+    type,
+    data: { labels, datasets:[{label,data,borderColor:color,backgroundColor:color+"55",borderWidth:2,fill:true,tension:0.3}] },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      animation:{duration:1500,easing:"easeOutQuart"},
+      scales:{
+        y:{beginAtZero:true,ticks:{color:'white'},grid:{color:'rgba(255,255,255,0.1)'}},
+        x:{ticks:{color:'white'},grid:{color:'rgba(255,255,255,0.1)'}}
+      },
+      plugins:{legend:{labels:{color:'white',font:{size:14}}}}
+    }
   });
-
-  // Total XP
-  const totalXP = subjects.reduce((a,b)=>a+b.xp,0);
-  document.getElementById("totalXP").textContent = totalXP.toFixed(0);
-  const fillPercent = Math.min(totalXP/50000*100,100);
-  document.getElementById("totalXPFill").style.width = fillPercent+"%";
 }
 
-function getLastNDates(n){
-  const dates = [];
-  const today = new Date();
-  for(let i=n-1;i>=0;i--){
-    const d = new Date();
-    d.setDate(today.getDate() - i);
-    dates.push(d.toISOString().slice(0,10));
-  }
-  return dates;
-}
-
-function getHoursPerDay(n){
-  const hours = [];
-  const dates = getLastNDates(n);
-  for(let d of dates){
-    let sum = 0;
-    sessionRecords.forEach(s=>{
-      if(s.date===d) sum += s.hours + s.minutes/60;
-    });
-    hours.push(sum.toFixed(1));
-  }
-  return hours;
-}
-
-// Weekly Chart
-const weeklyCtx = document.getElementById("weeklyChart").getContext("2d");
-new Chart(weeklyCtx,{
-  type:'bar',
-  data:{
-    labels:getLastNDates(7),
-    datasets:[{
-      label:'Hours Studied',
-      data:getHoursPerDay(7),
-      backgroundColor:'rgba(0,216,255,0.7)'
-    }]
-  },
-  options:{scales:{y:{beginAtZero:true,title:{display:true,text:'Hours'}},x:{title:{display:true,text:'Date'}}}}
-});
-
-// Monthly Chart
-const monthlyCtx = document.getElementById("monthlyChart").getContext("2d");
-new Chart(monthlyCtx,{
-  type:'bar',
-  data:{
-    labels:getLastNDates(30),
-    datasets:[{
-      label:'Hours Studied',
-      data:getHoursPerDay(30),
-      backgroundColor:'rgba(0,216,255,0.5)'
-    }]
-  },
-  options:{scales:{y:{beginAtZero:true,title:{display:true,text:'Hours'}},x:{title:{display:true,text:'Date'}}}}
-});
-
-window.onload = updateProgressUI;
+// Create charts
+createChart(document.getElementById("hoursChart"),"Hours Studied",hoursData,"bar","cyan");
+createChart(document.getElementById("marksChart"),"Marks",marksData,"line","#00ff88");
+createChart(document.getElementById("xpChart"),"XP",xpData,"line","#ff8800");

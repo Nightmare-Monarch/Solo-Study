@@ -1,28 +1,322 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-* {margin:0;padding:0;box-sizing:border-box;font-family:'Orbitron',sans-serif;}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Orbitron', sans-serif;
+}
+
 body {
   background: radial-gradient(circle at top, #0b0b1a, #000);
   color: #e0f7ff;
-  min-height:100vh;
-  overflow-x:hidden;
-  padding-bottom:130px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-bottom: 150px; /* leave space for bottom buttons */
 }
-.title {text-align:center;font-size:3rem;color:#00d8ff;text-shadow:0 0 10px #00d8ff,0 0 20px #00aaff;margin-top:20px;letter-spacing:2px;}
-.motivation {text-align:center;font-size:1.2rem;margin:15px 0;color:#00d8ff;text-shadow:0 0 8px #00aaff;}
-.top-menu {display:flex;justify-content:center;gap:15px;margin-bottom:20px;}
-.menu-btn {text-decoration:none;color:#fff;font-weight:bold;padding:10px 20px;border-radius:25px;background:linear-gradient(90deg,#0077aa,#00d8ff);box-shadow:0 0 10px #00d8ff;transition:0.3s;}
-.menu-btn:hover {background:linear-gradient(90deg,#00d8ff,#0077aa);box-shadow:0 0 20px #00d8ff,0 0 40px #00aaff;}
-.input-section {display:flex;justify-content:center;align-items:center;margin-bottom:25px;}
-.input-section input {flex:1;max-width:400px;padding:12px 20px;border-radius:30px 0 0 30px;border:none;outline:none;background:#0d1b2a;color:#00d8ff;font-weight:bold;box-shadow:inset 0 0 10px #003366;}
-.btn {padding:12px 20px;border:none;font-weight:bold;color:white;cursor:pointer;transition:0.3s;}
-.curved-btn {border-radius:30px;background:linear-gradient(90deg,#00aaff,#0077aa);box-shadow:0 0 15px #00d8ff;}
-.curved-btn:hover {background:linear-gradient(90deg,#00d8ff,#0077aa);box-shadow:0 0 25px #00e6ff,0 0 50px #0099ff;}
-.subjects .subject {background:rgba(10,20,35,0.9);padding:15px;margin:12px 0;border-radius:15px;box-shadow:0 0 15px rgba(0,216,255,0.3);border:1px solid rgba(0,216,255,0.3);}
-.subject strong {font-size:1.2rem;color:#00d8ff;text-shadow:0 0 8px #00aaff;}
-.progress {width:100%;height:16px;background:rgba(255,255,255,0.1);border-radius:10px;margin:8px 0;overflow:hidden;box-shadow:inset 0 0 6px #004466;}
-.progress-fill {height:100%;border-radius:10px;transition:width 0.8s ease-in-out;}
-.marks-bar .progress-fill {background:linear-gradient(90deg,#ff7f50,#ff4500);box-shadow:0 0 10px #ff7f50;}
-.total-bar {margin:15px 0;padding:15px;background:rgba(20,30,50,0.9);border-radius:15px;box-shadow:0 0 20px rgba(0,216,255,0.4);border:1px solid rgba(0,216,255,0.4);}
-.total-bar strong {display:block;margin-bottom:6px;color:#00d8ff;text-shadow:0 0 6px #00aaff;}
-#bottomButtons {position:fixed;bottom:0;left:50%;transform:translateX(-50%);background:#0d1b2a;padding:15px 0;display:flex;justify-content:center;gap:15px;box-shadow:0 -2px 20px rgba(0,216,255,0.3);z-index:1000;border-top:1px solid rgba(0,216,255,0.2);}
+
+/* Title */
+.title {
+  text-align: center;
+  font-size: 3rem;
+  color: #00d8ff;
+  text-shadow: 0 0 10px #00d8ff, 0 0 20px #00aaff;
+  margin-top: 20px;
+  letter-spacing: 2px;
+}
+
+/* Motivation */
+.motivation {
+  text-align: center;
+  font-size: 1.2rem;
+  margin: 15px 0;
+  color: #00d8ff;
+  text-shadow: 0 0 8px #00aaff;
+}
+
+/* Menu Buttons */
+.top-menu {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.menu-btn {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 25px;
+  background: linear-gradient(90deg, #0077aa, #00d8ff);
+  box-shadow: 0 0 10px #00d8ff;
+  transition: 0.3s;
+}
+
+.menu-btn:hover {
+  background: linear-gradient(90deg, #00d8ff, #0077aa);
+  box-shadow: 0 0 20px #00d8ff, 0 0 40px #00aaff;
+}
+
+/* Input Section */
+.input-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 25px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.input-section input {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  outline: none;
+  background: #0d1b2a;
+  color: #00d8ff;
+  font-weight: bold;
+  border-radius: 30px 0 0 30px; /* curved left */
+  box-shadow: inset 0 0 10px #003366;
+}
+
+.input-section button {
+  border-radius: 0 30px 30px 0; /* curved right */
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(90deg, #00aaff, #0077aa);
+  box-shadow: 0 0 15px #00d8ff;
+  transition: 0.3s;
+}
+
+.input-section button:hover {
+  background: linear-gradient(90deg, #00d8ff, #0077aa);
+  box-shadow: 0 0 25px #00e6ff, 0 0 50px #0099ff;
+}
+
+/* Subject Boxes */
+.subjects .subject {
+  background: rgba(10, 20, 35, 0.9);
+  padding: 15px;
+  margin: 12px 0;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 216, 255, 0.3);
+  border: 1px solid rgba(0, 216, 255, 0.3);
+  opacity: 0;
+  transform: translateY(15px);
+  animation: fadeInUp 0.6s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.subject strong {
+  font-size: 1.2rem;
+  color: #00d8ff;
+  text-shadow: 0 0 8px #00aaff;
+}
+
+/* Progress Bars */
+.progress {
+  width: 100%;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin: 8px 0;
+  overflow: hidden;
+  box-shadow: inset 0 0 6px #004466;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.8s ease-in-out;
+}
+
+/* Marks Bar */
+.marks-bar .progress-fill {
+  background: linear-gradient(90deg, #ff7f50, #ff4500);
+  box-shadow: 0 0 10px #ff7f50;
+}
+
+/* Total Bar */
+.total-bar {
+  margin: 15px 0;
+  padding: 15px;
+  background: rgba(20, 30, 50, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 216, 255, 0.4);
+  border: 1px solid rgba(0, 216, 255, 0.4);
+}
+
+.total-bar strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #00d8ff;
+  text-shadow: 0 0 6px #00aaff;
+}
+
+#bottomButtons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px; /* space below total bars */
+}
+
+#bottomButtons .btn {
+  padding: 12px 20px;
+  border-radius: 30px;
+  background: linear-gradient(90deg, #00aaff, #0077aa);
+  color: white;
+  font-weight: bold;
+  border: none;
+  box-shadow: 0 0 15px #00d8ff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#bottomButtons .btn:hover {
+  background: linear-gradient(90deg, #00d8ff, #0077aa);
+  box-shadow: 0 0 25px #00e6ff, 0 0 50px #0099ff;
+}
+
+
+/* Progress Page Charts */
+.chart-container {
+  background: rgba(10, 20, 35, 0.9);
+  padding: 15px;
+  margin: 15px auto;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 216, 255, 0.3);
+  border: 1px solid rgba(0, 216, 255, 0.3);
+  max-width: 900px;
+  width: 90%;
+  height: 250px; /* compact height */
+}
+
+/* Chart titles */
+.subtitle {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #00d8ff;
+  text-shadow: 0 0 8px #00aaff;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+/* Adjust chart canvas */
+canvas {
+  display: block;
+  margin: 0 auto;
+  max-width: 600px;
+  max-height: 1200px;
+}
+
+
+/* === Progress Page Styling === */
+.progress-body {
+  background: radial-gradient(circle at center, #040404, #000);
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.progress-container {
+  width: 95%;
+  max-width: 1100px;
+  padding: 20px;
+  border-radius: 20px;
+  background: rgba(15, 15, 15, 0.95);
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
+  text-align: center;
+}
+
+.progress-title {
+  font-size: 2.4rem;
+  color: cyan;
+  text-shadow: 0 0 15px cyan;
+  margin-bottom: 30px;
+}
+
+.stats-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.stat-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 15px;
+  width: 30%;
+  min-width: 200px;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+}
+
+.stat-box h2 {
+  color: #00ffff;
+  font-size: 1.2rem;
+}
+
+.stat-box p {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-top: 8px;
+  color: white;
+}
+
+.chart-box {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  padding: 25px;
+  margin: 30px 0;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.15);
+}
+
+.chart-box canvas {
+  width: 100% !important;
+  height: 380px !important;
+}
+
+.back-btn {
+  display: inline-block;
+  margin-top: 25px;
+  background: cyan;
+  color: black;
+  padding: 12px 25px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background: white;
+  color: black;
+  box-shadow: 0 0 15px cyan;
+}
+
+.chart-box canvas {
+  width: 100% !important;
+  height: 350px !important;  /* taller charts */
+}
+
+.chart-wrapper { width: 90%; max-width: 900px; height: 380px; margin: 20px auto; }
+
+
+/* Make bars thinner for bar chart */

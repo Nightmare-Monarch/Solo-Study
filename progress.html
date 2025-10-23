@@ -2,33 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>📊 Study Progress</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-  <div class="container">
-    <h1 class="title">📊 Study Progress</h1>
+<body class="progress-body">
+  <div class="progress-container">
+    <h1 class="progress-title">📈 Daily Progress</h1>
 
-    <!-- Total XP -->
-    <div class="total-bar">
-      <strong>Total XP: <span id="totalXP">0</span> / 50,000</strong>
-      <div class="progress full-xp">
-        <div id="totalXPFill" class="progress-fill"></div>
+    <div class="stats-container">
+      <div class="stat-box">
+        <h2>Total Study Hours</h2>
+        <p id="totalHours">0h</p>
+      </div>
+      <div class="stat-box">
+        <h2>Total Marks</h2>
+        <p id="totalMarks">0</p>
+      </div>
+      <div class="stat-box">
+        <h2>Total XP</h2>
+        <p id="totalXP">0</p>
       </div>
     </div>
 
-    <!-- Subjects -->
-    <div id="subjectProgressContainer" class="subjects"></div>
+    <div class="chart-box">
+      <h2>Study Hours Progress</h2>
+      <canvas id="hoursChart"></canvas>
+    </div>
 
-    <!-- Charts -->
-    <h2 class="subtitle">Weekly Hours (Last 7 Days)</h2>
-    <canvas id="weeklyChart" height="120"></canvas>
+    <div class="chart-box">
+      <h2>Marks Progress</h2>
+      <canvas id="marksChart"></canvas>
+    </div>
 
-    <h2 class="subtitle">Monthly Hours (Last 30 Days)</h2>
-    <canvas id="monthlyChart" height="120"></canvas>
+    <div class="chart-box">
+      <h2>XP Progress</h2>
+      <canvas id="xpChart"></canvas>
+    </div>
 
-    <a href="index.html" class="menu-btn curved-btn">🏠 Back</a>
+    <a href="index.html" class="back-btn">🏠 Back to Main</a>
   </div>
 
   <script src="progress.js"></script>

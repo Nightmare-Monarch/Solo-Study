@@ -9,6 +9,7 @@
 <body>
   <div class="container">
     <h1 class="title">📜 Study History</h1>
+
     <div id="historyContainer" class="history-list"></div>
 
     <div class="history-actions">
@@ -17,44 +18,6 @@
     </div>
   </div>
 
-<script>
-function loadHistory(){
-  const container=document.getElementById("historyContainer");
-  container.innerHTML="";
-  let history=JSON.parse(localStorage.getItem("sessionHistory")||"[]");
-  history.forEach((item,i)=>{
-    let div=document.createElement("div");
-    div.className="history-row";
-    div.innerHTML=`${item.subject} - ${item.hours}h ${item.minutes}m - Marks: ${item.marksGained} - ${item.date} 
-    <button onclick="deleteSession(${i})">Remove</button>`;
-    container.appendChild(div);
-  });
-}
-
-function deleteSession(index){
-  if(!confirm("Delete this session?")) return;
-  const history=JSON.parse(localStorage.getItem("sessionHistory"));
-  const removed=history.splice(index,1)[0];
-  // Remove marks from main subjects
-  let subjects=JSON.parse(localStorage.getItem("subjects"));
-  const sub=subjects.find(s=>s.name===removed.subject);
-  if(sub){
-    sub.marks -= parseFloat(removed.marksGained);
-    if(sub.marks<0) sub.marks=0;
-  }
-  localStorage.setItem("subjects",JSON.stringify(subjects));
-  localStorage.setItem("sessionHistory",JSON.stringify(history));
-  loadHistory();
-}
-
-function clearHistory(){
-  if(!confirm("Clear all history?")) return;
-  localStorage.removeItem("sessionHistory");
-  loadHistory();
-}
-
-window.onload=loadHistory;
-</script>
-
+  <script src="history.js"></script>
 </body>
 </html>
