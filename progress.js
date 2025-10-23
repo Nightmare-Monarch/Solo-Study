@@ -1,59 +1,106 @@
-// Get session data from localStorage
-let sessionHistory = JSON.parse(localStorage.getItem("sessionHistory")) || [];
 let subjects = JSON.parse(localStorage.getItem("subjects")) || [];
+let sessionHistory = JSON.parse(localStorage.getItem("sessionHistory")) || [];
 
-// Prepare daily data
-let dailyData = {};
+// Get last N dates
+function getLastNDates(n){
+  const dates=[];
+  const today=new Date();
+  for(let i=n-1;i>=0;i--){
+    const date=new Date();
+    date.setDate(today.getDate()-i);
+    dates.push(date.toISOString().slice(0,10));
+  }
+  return dates;
+}
 
-// Go through sessionHistory and calculate hours per day
-sessionHistory.forEach(snapshot => {
-    let subData = JSON.parse(snapshot);
-    let date = new Date().toLocaleDateString();
-    let hoursToday = 0;
-    subData.forEach(s => {
-        hoursToday += s.marks * (15 / 100); // convert marks to hours approx
+// Sum study hours for a date
+function getDailyHours(date){
+  let total=0;
+  sessionHistory.forEach(session=>{
+    const s=JSON.parse(session);
+    s.forEach(sub=>{
+      if(sub.lastSession && sub.lastSession.date===date){
+        total += sub.lastSession.hours + sub.lastSession.minutes/60;
+      }
     });
-    if(dailyData[date]) dailyData[date] += hoursToday;
-    else dailyData[date] = hoursToday;
+  });
+  return total.toFixed(1);
+}
+
+// Sum XP for a date
+function getDailyXP(date){
+  let totalXP=0;
+  sessionHistory.forEach(session=>{
+    const s=JSON.parse(session);
+    s.forEach(sub=>{
+      if(sub.lastSession && sub.lastSession.date===date){
+        totalXP += sub.lastSession.xp;
+      }
+    });
+  });
+  return totalXP.toFixed(1);
+}
+
+// === Daily Chart ===
+const dailyCtx = document.getElementById("dailyChart").getContext("2d");
+const dailyDates = getLastNDates(7);
+const dailyData = dailyDates.map(date=>getDailyHours(date));
+new Chart(dailyCtx,{
+  type:'bar',
+  data:{ labels:dailyDates, datasets:[{label:'Hours Studied', data:dailyData, backgroundColor:'rgba(0,216,255,0.7)'}] },
+  options:{ scales:{ y:{beginAtZero:true,title:{display:true,text:'Hours'}}, x:{title:{display:true,text:'Date'}} } }
 });
 
-// Sort dates
-let dates = Object.keys(dailyData);
-let hours = Object.values(dailyData);
-
-// Create chart
-const ctx = document.getElementById('progressChart').getContext('2d');
-const progressChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: dates,
-        datasets: [{
-            label: 'Hours Studied',
-            data: hours,
-            borderColor: '#00d8ff',
-            backgroundColor: 'rgba(0,216,255,0.2)',
-            fill: true,
-            tension: 0.4,
-            pointRadius: 6,
-            pointHoverRadius: 8
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: { display: true, labels: { color: '#00d8ff' } },
-            tooltip: { mode: 'index', intersect: false }
-        },
-        scales: {
-            x: { 
-                ticks: { color: '#00d8ff' },
-                grid: { color: 'rgba(255,255,255,0.1)' }
-            },
-            y: { 
-                beginAtZero: true,
-                ticks: { color: '#00d8ff' },
-                grid: { color: 'rgba(255,255,255,0.1)' }
-            }
-        }
-    }
+// === Weekly Chart ===
+const weeklyCtx = document.getElementById("weeklyChart").getContext("2d");
+let weeklyData=[];
+for(let w=0; w<4; w++){
+  let sum=0;
+  for(let d=0; d<7; d++){
+    let date=new Date();
+    date.setDate(date.getDate()-(w*7+d));
+    let dateStr=date.toISOString().slice(0,10);
+    sum += parseFloat(getDailyHours(dateStr));
+  }
+  weeklyData.unshift(sum.toFixed(1));
+}
+new Chart(weeklyCtx,{
+  type:'bar',
+  data:{ labels:['4 weeks ago','3 weeks ago','2 weeks ago','Last week'], datasets:[{label:'Weekly Hours', data:weeklyData, backgroundColor:'rgba(0,216,255,0.5)'}] },
+  options:{ scales:{ y:{beginAtZero:true,title:{display:true,text:'Hours'}}, x:{title:{display:true,text:'Week'}} } }
 });
+
+// === XP Chart ===
+const xpCtx = document.getElementById("xpChart").getContext("2d");
+const xpDates = getLastNDates(30);
+let xpData = [];
+let cumulativeXP = 0;
+xpDates.forEach(date=>{
+  let xp = parseFloat(getDailyXP(date));
+  cumulativeXP += xp;
+  xpData.push(cumulativeXP);
+});
+new Chart(xpCtx,{
+  type:'line',
+  data:{
+    labels: xpDates,
+    datasets:[{
+      label:'Cumulative XP',
+      data: xpData,
+      fill:true,
+      backgroundColor:'rgba(0,216,255,0.2)',
+      borderColor:'rgba(0,216,255,0.8)',
+      tension:0.3
+    }]
+  },
+  options:{ scales:{ y:{beginAtZero:true,title:{display:true,text:'XP'}}, x:{title:{display:true,text:'Date'}} } }
+});
+
+// === Total Marks & XP ===
+const totalMarks = subjects.reduce((a,b)=>a.marks+a,0);
+document.getElementById("totalMarksProgress").textContent = totalMarks.toFixed(1);
+document.getElementById("fullMarksFillProgress").style.width = (totalMarks/900*100).toFixed(1)+'%';
+
+const totalXP = subjects.reduce((a,b)=>a.xp+a,0);
+document.getElementById("totalXPProgress").textContent = totalXP.toFixed(1);
+document.getElementById("fullXPFillProgress").style.width = (totalXP/100000*100).toFixed(1)+'%';

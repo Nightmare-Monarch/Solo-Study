@@ -10,11 +10,35 @@
 <div class="container">
   <h1 class="title">📊 Study Progress</h1>
 
-  <canvas id="progressChart" height="200"></canvas>
+  <!-- Daily Progress Chart -->
+  <h2 class="subtitle">Daily Study Hours (Last 7 Days)</h2>
+  <canvas id="dailyChart" height="150"></canvas>
 
-  <div class="menu top-menu">
-    <a href="index.html" class="menu-btn curved-btn">🏠 Back</a>
+  <!-- Weekly Progress Chart -->
+  <h2 class="subtitle">Weekly Study Hours (Last 4 Weeks)</h2>
+  <canvas id="weeklyChart" height="150"></canvas>
+
+  <!-- XP Progress Chart -->
+  <h2 class="subtitle">XP Progression (Last 30 Days)</h2>
+  <canvas id="xpChart" height="150"></canvas>
+
+  <!-- Total Marks -->
+  <div class="total-bar">
+    <strong>Total Marks: <span id="totalMarksProgress">0</span> / 900</strong>
+    <div class="progress full-marks">
+      <div id="fullMarksFillProgress" class="progress-fill"></div>
+    </div>
   </div>
+
+  <!-- Total XP -->
+  <div class="total-bar">
+    <strong>Total XP: <span id="totalXPProgress">0</span> / 100000</strong>
+    <div class="progress full-xp">
+      <div id="fullXPFillProgress" class="progress-fill"></div>
+    </div>
+  </div>
+
+  <a href="index.html" class="menu-btn curved-btn">🏠 Back</a>
 </div>
 
 <script src="progress.js"></script>
