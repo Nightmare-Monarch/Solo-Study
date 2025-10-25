@@ -1,32 +1,57 @@
-// progress.js — draw three charts from dailyProgress
-const dailyProgress = JSON.parse(localStorage.getItem("dailyProgress")) || [];
-const sorted = dailyProgress.slice().sort((a,b) => new Date(a.date) - new Date(b.date));
-const labels = sorted.map(d => d.date);
-const hoursData = sorted.map(d => +(d.hours || 0).toFixed(2));
-const marksData = sorted.map(d => +(d.marks || 0).toFixed(2));
-const xpData = sorted.map(d => Math.floor(d.xp || 0));
+// progress.js — Daily Progress Charts
+document.addEventListener("DOMContentLoaded", () => {
+  const dailyProgress = JSON.parse(localStorage.getItem("dailyProgress")) || [];
+  const subjects = JSON.parse(localStorage.getItem("subjects")) || [];
 
-document.getElementById("totalHours").innerText = hoursData.reduce((a,b)=>a+b,0).toFixed(2) + " h";
-document.getElementById("totalMarks").innerText = marksData.reduce((a,b)=>a+b,0).toFixed(1);
-document.getElementById("totalXP").innerText = xpData.reduce((a,b)=>a+b,0);
+  const totalHours = dailyProgress.reduce((a,b)=>a+b.hours,0).toFixed(1);
+  const totalMarks = dailyProgress.reduce((a,b)=>a+b.marks,0).toFixed(1);
+  const totalXP = dailyProgress.reduce((a,b)=>a+b.xp,0).toFixed(0);
 
-function createChart(ctx, label, data, type, color){
-  return new Chart(ctx, {
-    type,
-    data: { labels, datasets: [{ label, data, borderColor: color, backgroundColor: (type==='bar'?color+'88':color+'55'), borderWidth: 2, fill: true, tension: 0.3, ...(type==='bar'?{barPercentage:0.45, categoryPercentage:0.6}:{}) }] },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: { beginAtZero:true, ticks:{ color: 'white' }, grid:{ color:'rgba(255,255,255,0.08)' } },
-        x: { ticks:{ color:'white' }, grid:{ color:'rgba(255,255,255,0.03)' } }
+  document.getElementById("totalHours").textContent = `${totalHours}h`;
+  document.getElementById("totalMarks").textContent = totalMarks;
+  document.getElementById("totalXP").textContent = totalXP;
+
+  const dates = dailyProgress.map(d => d.date);
+  const hoursData = dailyProgress.map(d => d.hours.toFixed(1));
+  const marksData = dailyProgress.map(d => d.marks.toFixed(1));
+  const xpData = dailyProgress.map(d => d.xp.toFixed(0));
+
+  function makeChart(id, label, data, color) {
+    const ctx = document.getElementById(id).getContext("2d");
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: dates,
+        datasets: [{
+          label: label,
+          data: data,
+          backgroundColor: color,
+          borderRadius: 6,
+          barThickness: id === "hoursChart" ? 14 : 24
+        }]
       },
-      plugins: { legend: { labels: { color:'white' } } }
-    }
-  });
-}
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            ticks: { color: "#00ffff" },
+            grid: { color: "rgba(0,255,255,0.1)" }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: "#00ffff" },
+            grid: { color: "rgba(0,255,255,0.1)" }
+          }
+        },
+        plugins: {
+          legend: { labels: { color: "#00ffff" } }
+        }
+      }
+    });
+  }
 
-// create charts
-createChart(document.getElementById("hoursChart"), "Hours Studied", hoursData, "bar", "#00d8ff");
-createChart(document.getElementById("marksChart"), "Marks", marksData, "line", "#ff7f50");
-createChart(document.getElementById("xpChart"), "XP", xpData, "line", "#00ff88");
+  makeChart("hoursChart", "Study Hours", hoursData, "rgba(0,255,255,0.6)");
+  makeChart("marksChart", "Marks", marksData, "rgba(255,165,0,0.6)");
+  makeChart("xpChart", "XP", xpData, "rgba(0,255,100,0.6)");
+});
