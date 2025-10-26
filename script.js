@@ -24,6 +24,14 @@ const MAX_MARKS_PER_SUBJECT = 100;
 const MAX_TOTAL_MARKS = subjects.length * MAX_MARKS_PER_SUBJECT; // 900
 const MAX_TOTAL_XP = 5000;
 
+  const totalHours = dailyProgress.reduce((a,b)=>a+b.hours,0).toFixed(1);
+  const totalMarks = dailyProgress.reduce((a,b)=>a+b.marks,0).toFixed(1);
+  const totalXP = dailyProgress.reduce((a,b)=>a+b.xp,0).toFixed(0);
+
+  document.getElementById("totalHours").textContent = `${totalHours}h`;
+  document.getElementById("totalMarks").textContent = totalMarks;
+  document.getElementById("totalXP").textContent = totalXP;
+
 // utility: save all
 function saveAll(){
   localStorage.setItem("subjects", JSON.stringify(subjects));
