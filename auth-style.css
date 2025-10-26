@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Orbitron', sans-serif;
+  background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.auth-container {
+  width: 400px;
+  perspective: 1000px;
+}
+
+.auth-box {
+  background: #111;
+  border: 2px solid #00ffe1;
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  box-shadow: 0 0 3px #00ffe1, 0 0 60px #00ffe1, 0 0 90px #00ffe1 inset;
+  transition: transform 0.5s;
+}
+
+.auth-box:hover {
+  transform: rotateY(10deg) rotateX(5deg);
+}
+
+.auth-box h1 {
+  color: #00ffe1;
+  margin-bottom: 30px;
+  text-shadow: 0 0 15px #00ffe1, 0 0 30px #00ffe1;
+}
+
+.auth-box input {
+  width: 90%;
+  padding: 15px;
+  margin: 12px 0;
+  background: #1b1b1b;
+  border: 2px solid #00ffe1;
+  border-radius: 12px;
+  color: #00ffe1;
+  font-size: 16px;
+  outline: none;
+  box-shadow: 0 0 10px #00ffe1 inset;
+  transition: all 0.3s ease-in-out;
+}
+
+.auth-box input:focus {
+  border-color: #ff00ff;
+  box-shadow: 0 0 15px #ff00ff inset, 0 0 20px #ff00ff;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper span {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #00ffe1;
+  font-weight: bold;
+  user-select: none;
+}
+
+.btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(90deg, #00ffe1, #ff00ff);
+  color: #111;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 15px;
+  box-shadow: 0 0 20px #00ffe1, 0 0 40px #ff00ff;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn:hover {
+  background: linear-gradient(90deg, #ff00ff, #00ffe1);
+  box-shadow: 0 0 30px #ff00ff, 0 0 50px #00ffe1, 0 0 70px #00ffe1 inset;
+}
+
+.switch {
+  color: #fff;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.switch span {
+  color: #ff00ff;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: 0.3s;
+}
+
+.switch span:hover {
+  color: #00ffe1;
+}
+

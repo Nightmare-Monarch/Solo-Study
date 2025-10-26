@@ -1,78 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+  <script type="module">
+    // ✅ LOCALSTORAGE LOGIN CHECK
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (!currentUser) {
+      // if not logged in, redirect
+      window.location.href = "login.html";
+    } else {
+      // show welcome message
+      const welcomeEl = document.getElementById("welcomeUser");
+      if (welcomeEl) welcomeEl.textContent = `Welcome, ${currentUser.username}! 🎮`;
+    }
+    
+    // LOGOUT BUTTON
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("currentUser");
+        window.location.href = "login.html";
+      });
+    }
+  </script>
+  
 <head>
-  <meta charset="utf-8" />
-  <title>Stopwatch</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<title>⏱️ Stopwatch</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <h1 class="title">⏱️ Stopwatch</h1>
 
-    <div style="text-align:center; margin:18px;">
-      <div id="display" style="font-size:48px;color:#00d8ff;">00:00:00</div>
-      <div style="margin-top:12px;">
+    <div class="stopwatch-card">
+      <div id="display">00:00:00</div>
+
+      <div class="stopwatch-buttons">
         <button class="btn curved-btn" id="startBtn">Start</button>
         <button class="btn curved-btn" id="pauseBtn">Pause</button>
         <button class="btn curved-btn" id="resetBtn">Reset</button>
       </div>
+
+      <div class="stopwatch-inputs">
+        <label>Subject:
+          <select id="swSubject">
+            <option value="">--Select--</option>
+          </select>
+        </label>
+
+        <label>Type:
+          <select id="swType">
+            <option value="study">Study</option>
+            <option value="homework">Homework (H)</option>
+            <option value="video">Video (V)</option>
+          </select>
+        </label>
+
+        <label>
+          <input type="checkbox" id="swPP"> Past Paper (PP)
+        </label>
+
+        <label>
+          <input type="checkbox" id="swQ"> Quiz (Q)
+        </label>
+
+        <button class="btn curved-btn" id="saveBtn">Save Session</button>
+      </div>
     </div>
 
-    <div style="margin-top:18px; text-align:center;">
-      <input id="swSubject" placeholder="Subject code (e.g. sin)" style="padding:10px;border-radius:8px;border:none;background:#0d1b2a;color:#00d8ff;width:40%;" />
-      <label style="color:#9feaff;margin-left:8px;"><input id="ppChk" type="checkbox" /> PP</label>
-      <label style="color:#9feaff;margin-left:8px;"><input id="qChk" type="checkbox" /> Q</label>
-      <label style="color:#9feaff;margin-left:8px;"><input id="hChk" type="radio" name="typeRadio" /> H</label>
-      <label style="color:#9feaff;margin-left:4px;"><input id="vChk" type="radio" name="typeRadio" /> V</label>
-      <label style="color:#9feaff;margin-left:4px;"><input id="sChk" type="radio" name="typeRadio" checked /> Study</label>
-    </div>
-
-    <div style="text-align:center;margin-top:16px;">
-      <button class="btn curved-btn" id="submitBtn">Submit Session</button>
-      <a href="index.html" class="menu-btn curved-btn" style="margin-left:8px;">🏠 Back</a>
-    </div>
+    <a href="index.html" class="back-btn">🏠 Back to Main</a>
   </div>
 
-  <script>
-    // stopwatch logic
-    let start = null, elapsed = 0, timer = null;
-    const display = document.getElementById("display");
-
-    function fmt(ms){
-      const s = Math.floor(ms/1000);
-      const hh = String(Math.floor(s/3600)).padStart(2,'0');
-      const mm = String(Math.floor((s%3600)/60)).padStart(2,'0');
-      const ss = String(s%60).padStart(2,'0');
-      return `${hh}:${mm}:${ss}`;
-    }
-
-    document.getElementById("startBtn").onclick = () => {
-      if(timer) return;
-      start = Date.now() - elapsed;
-      timer = setInterval(()=>{ elapsed = Date.now() - start; display.textContent = fmt(elapsed); }, 200);
-    };
-    document.getElementById("pauseBtn").onclick = () => { clearInterval(timer); timer = null; };
-    document.getElementById("resetBtn").onclick = () => { clearInterval(timer); timer=null; elapsed = 0; display.textContent = '00:00:00'; };
-
-    document.getElementById("submitBtn").onclick = () => {
-      const subject = (document.getElementById("swSubject").value || "").trim().toLowerCase();
-      if(!subject) return alert("Enter subject code (e.g. sin)");
-      const minutes = Math.floor(elapsed / 60000);
-      if(minutes <= 0) return alert("Record at least 1 minute to submit");
-
-      const pp = !!document.getElementById("ppChk").checked;
-      const q = !!document.getElementById("qChk").checked;
-      const type = document.getElementById("vChk").checked ? "video" : (document.getElementById("hChk").checked ? "homework" : "study");
-
-      // create pending session to be applied when user returns to index
-      const pending = { code: subject, minutes, pp, q, type };
-      localStorage.setItem("pendingSession", JSON.stringify(pending));
-      alert("Saved pending session — it will be applied when you return to Main page.");
-      // auto-redirect to index to apply (optional)
-      window.location.href = "index.html";
-    };
-  </script>
+<script src="stopwatch.js"></script>
 </body>
 </html>

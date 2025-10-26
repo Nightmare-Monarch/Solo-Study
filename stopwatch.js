@@ -1,17 +1,75 @@
-let swInterval, swTime=0;
-function formatTime(t){
-  let h=Math.floor(t/3600);
-  let m=Math.floor((t%3600)/60);
-  let s=t%60;
-  return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+// Stopwatch logic
+let hours = 0, minutes = 0, seconds = 0;
+let timer = null;
+const display = document.getElementById("display");
+const startBtn = document.getElementById("startBtn");
+const pauseBtn = document.getElementById("pauseBtn");
+const resetBtn = document.getElementById("resetBtn");
+const saveBtn = document.getElementById("saveBtn");
+
+// Populate subjects
+const swSubject = document.getElementById("swSubject");
+let subjects = JSON.parse(localStorage.getItem("subjects")) || [];
+subjects.forEach(s => {
+  const option = document.createElement("option");
+  option.value = s.code;
+  option.textContent = s.name;
+  swSubject.appendChild(option);
+});
+
+function updateDisplay() {
+  const h = String(hours).padStart(2,'0');
+  const m = String(minutes).padStart(2,'0');
+  const s = String(seconds).padStart(2,'0');
+  display.textContent = `${h}:${m}:${s}`;
 }
-function startStopwatch(){ clearInterval(swInterval); swInterval=setInterval(()=>{ swTime++; document.getElementById("display").textContent=formatTime(swTime); },1000);}
-function pauseStopwatch(){ clearInterval(swInterval);}
-function resetStopwatch(){ clearInterval(swInterval); swTime=0; document.getElementById("display").textContent=formatTime(swTime);}
-function submitStopwatchSession(){
-  const mins=Math.floor(swTime/60);
-  const code=document.getElementById("subjectSelect").value;
-  addSession(code, mins, false, false);
-  swTime=0; document.getElementById("display").textContent=formatTime(swTime);
-  saveData(); alert("Session submitted!");
-}
+
+// Start / Pause / Reset
+startBtn.addEventListener("click", () => {
+  if(timer) return;
+  timer = setInterval(() => {
+    seconds++;
+    if(seconds >= 60){ seconds = 0; minutes++; }
+    if(minutes >= 60){ minutes = 0; hours++; }
+    updateDisplay();
+  },1000);
+});
+
+pauseBtn.addEventListener("click", () => {
+  clearInterval(timer);
+  timer = null;
+});
+
+resetBtn.addEventListener("click", () => {
+  clearInterval(timer);
+  timer = null;
+  hours = minutes = seconds = 0;
+  updateDisplay();
+});
+
+// Save session
+saveBtn.addEventListener("click", () => {
+  const code = swSubject.value;
+  const type = document.getElementById("swType").value;
+  const pp = document.getElementById("swPP").checked;
+  const q = document.getElementById("swQ").checked;
+
+  if(!code) return alert("Select a subject!");
+
+  // convert total time to minutes
+  const totalMinutes = hours*60 + minutes + seconds/60;
+  if(totalMinutes <= 0) return alert("Time must be greater than 0");
+
+  // store pending session in localStorage
+  localStorage.setItem("pendingSession", JSON.stringify({
+    code, minutes: totalMinutes, pp, q, type
+  }));
+
+  alert(`Session saved! ${hours}h ${minutes}m ${seconds}s for ${type}`);
+  
+  // reset stopwatch
+  hours = minutes = seconds = 0;
+  updateDisplay();
+  clearInterval(timer);
+  timer = null;
+});

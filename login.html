@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Solo Study - Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="auth-style.css">
+</head>
+<body>
+
+<div class="auth-container">
+  <!-- LOGIN BOX -->
+  <div class="auth-box" id="loginBox">
+    <h1>SOLO STUDY LOGIN</h1>
+    <input id="userLogin" type="text" placeholder="Username or Email">
+    <div class="password-wrapper">
+      <input id="passwordLogin" type="password" placeholder="Password">
+      <span id="togglePasswordLogin">👁️</span>
+    </div>
+    <button class="btn" id="loginBtn">LOGIN</button>
+    <p class="switch">Don't have an account? <span id="switchToSignUp">Sign Up</span></p>
+  </div>
+
+  <!-- SIGNUP BOX -->
+  <div class="auth-box" id="signupBox" style="display:none;">
+    <h1>SOLO STUDY SIGN UP</h1>
+    <input id="username" type="text" placeholder="Username">
+    <input id="email" type="email" placeholder="Email">
+    <div class="password-wrapper">
+      <input id="password" type="password" placeholder="Password (min 8 chars)">
+      <span id="togglePassword">👁️</span>
+    </div>
+    <button class="btn" id="signupBtn">SIGN UP</button>
+    <p class="switch">Already have an account? <span id="switchToLogin">Login</span></p>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+</body>
+</html>

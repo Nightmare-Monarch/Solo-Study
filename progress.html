@@ -1,5 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+  <script type="module">
+    // ✅ LOCALSTORAGE LOGIN CHECK
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (!currentUser) {
+      // if not logged in, redirect
+      window.location.href = "login.html";
+    } else {
+      // show welcome message
+      const welcomeEl = document.getElementById("welcomeUser");
+      if (welcomeEl) welcomeEl.textContent = `Welcome, ${currentUser.username}! 🎮`;
+    }
+    
+    // LOGOUT BUTTON
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("currentUser");
+        window.location.href = "login.html";
+      });
+    }
+  </script>
+  
 <head>
   <meta charset="UTF-8" />
   <title>📈 Progress</title>

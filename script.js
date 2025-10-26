@@ -1,5 +1,6 @@
 // v3.1.0 main script
 // Subjects with marks & xp
+
 let subjects = JSON.parse(localStorage.getItem("subjects")) || [
   { name: "Sinhala", code: "sin", marks: 0, xp: 0 },
   { name: "Science", code: "sci", marks: 0, xp: 0 },
@@ -21,7 +22,7 @@ let undoStack = JSON.parse(localStorage.getItem("undoStack")) || [];
 // constants
 const MAX_MARKS_PER_SUBJECT = 100;
 const MAX_TOTAL_MARKS = subjects.length * MAX_MARKS_PER_SUBJECT; // 900
-const MAX_TOTAL_XP = 50000;
+const MAX_TOTAL_XP = 5000;
 
 // utility: save all
 function saveAll(){
@@ -223,6 +224,7 @@ function applyPendingFromStopwatch(){
   } catch(e){ console.error(e); }
 }
 
+
 // ENTER key handler
 document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("sessionInput");
@@ -246,7 +248,8 @@ const quotes = [
   "Consistency is key to mastery.",
   "Every hour counts, keep going!",
   "Your future self will thank you.",
-  "Small steps lead to big progress."
+  "Small steps lead to big progress.",
+  "Wake Up To Reality."
 ];
 function showMotivation(){
   const el = document.getElementById("motivationQuote");
@@ -254,3 +257,21 @@ function showMotivation(){
   el.textContent = quotes[Math.floor(Math.random()*quotes.length)];
 }
 setInterval(showMotivation, 15000);
+
+// Check if user is logged in
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+if(!currentUser){
+  window.location.href = "login.html";
+} else {
+  const welcomeEl = document.getElementById("welcomeUser");
+  if(welcomeEl) welcomeEl.textContent = `Welcome, ${currentUser.username}!`;
+}
+
+// Logout
+const logoutBtn = document.getElementById("logoutBtn");
+if(logoutBtn){
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("currentUser");
+    window.location.href = "login.html";
+  });
+}

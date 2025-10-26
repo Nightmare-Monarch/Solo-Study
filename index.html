@@ -7,39 +7,59 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
+  <!-- Logout Button -->
+  <button id="logoutBtn"
+    style="
+      position: absolute;
+      top: 25px;
+      right: 30px;
+      background: linear-gradient(90deg, #ff004c, #ff7700);
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      border: none;
+      border-radius: 15px;
+      padding: 10px 20px;
+      cursor: pointer;
+      box-shadow: 0 0 20px #ff004c;
+      transition: 0.3s;
+    ">
+    🔒 LOGOUT
+  </button>
+
   <div class="container">
+    <p id="welcomeUser" class="text-white font-bold mb-4"></p>
     <h1 class="title">🗡️ Solo Study Tracker</h1>
 
     <div class="motivation">
       <p id="motivationQuote">“Study hard, shine later!”</p>
     </div>
 
-        <!-- Dashboard cards -->
-        <div class="stats-container main-dashboard">
-          <div class="stat-box">
-            <h2>Total Study Hours</h2>
-            <p id="totalHoursMain">0h</p>
-          </div>
-          <div class="stat-box">
-            <h2>Total Marks</h2>
-            <p id="totalMarksMain">0</p>
-          </div>
-          <div class="stat-box">
-            <h2>Total XP</h2>
-            <p id="totalXPMain">0</p>
-          </div>
-        </div>
-    
+    <div class="stats-container main-dashboard">
+      <div class="stat-box">
+        <h2>Total Study Hours</h2>
+        <p id="totalHoursMain">0h</p>
+      </div>
+      <div class="stat-box">
+        <h2>Total Marks</h2>
+        <p id="totalMarksMain">0</p>
+      </div>
+      <div class="stat-box">
+        <h2>Total XP</h2>
+        <p id="totalXPMain">0</p>
+      </div>
+    </div>
+
     <div class="menu top-menu">
       <a href="history.html" class="menu-btn curved-btn">📜 History</a>
       <a href="progress.html" class="menu-btn curved-btn">📈 Progress</a>
       <a href="stopwatch.html" class="menu-btn curved-btn">⏱️ Stopwatch</a>
     </div>
 
-
     <div class="input-section">
-      <input id="sessionInput" placeholder="e.g. sin 2h pp  OR  sin 1h H  OR  sin 1h V" />
+      <input id="sessionInput" placeholder="Please Enter Your Session" />
       <button class="btn curved-btn" onclick="handleSessionInput()">Add Session</button>
     </div>
 
@@ -51,7 +71,7 @@
         <div id="fullMarksFill" class="progress-fill"></div>
       </div>
 
-      <strong>Total XP: <span id="totalXPBottom">0</span> / 50000</strong>
+      <strong>Total XP: <span id="totalXPBottom">0</span> / 5000</strong>
       <div class="progress full-xp">
         <div id="fullXPFill" class="progress-fill"></div>
       </div>
@@ -64,25 +84,50 @@
     </div>
   </div>
 
+  <!-- Main app logic -->
   <script src="script.js"></script>
-  <script>
-    // update main page dashboard cards
-    function updateMainDashboard(){
-      const totalHours = dailyProgress.reduce((sum,d)=>sum+d.hours,0);
-      const totalMarks = subjects.reduce((sum,s)=>sum+s.marks,0);
-      const totalXP = subjects.reduce((sum,s)=>sum+s.xp,0);
 
-      document.getElementById("totalHoursMain").textContent = totalHours.toFixed(1) + "h";
-      document.getElementById("totalMarksMain").textContent = totalMarks.toFixed(1);
-      document.getElementById("totalXPMain").textContent = Math.floor(totalXP);
+  <!-- Login check and initialize UI -->
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Check if user is logged in
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (!currentUser) {
+      window.location.href = "login.html";
+      return;
     }
 
-    // call after UI update
-    const originalUpdateUI = updateUI;
-    updateUI = function(){
-      originalUpdateUI();
-      updateMainDashboard();
-    };
+    // Show welcome message
+    const welcomeEl = document.getElementById("welcomeUser");
+    if (welcomeEl) welcomeEl.textContent = `Welcome, ${currentUser.username}! 🎮`;
+
+    // Load subjects & dailyProgress if not already loaded
+    if (typeof subjects === "undefined") window.subjects = JSON.parse(localStorage.getItem("subjects")) || [
+      { name: "Sinhala", code: "sin", marks: 0, xp: 0 },
+      { name: "Science", code: "sci", marks: 0, xp: 0 },
+      { name: "Commerce", code: "com", marks: 0, xp: 0 },
+      { name: "Buddhism", code: "bud", marks: 0, xp: 0 },
+      { name: "History", code: "his", marks: 0, xp: 0 },
+      { name: "Dancing", code: "dan", marks: 0, xp: 0 },
+      { name: "Health", code: "hea", marks: 0, xp: 0 },
+      { name: "Maths", code: "mat", marks: 0, xp: 0 },
+      { name: "English", code: "eng", marks: 0, xp: 0 }
+    ];
+
+    if (typeof dailyProgress === "undefined") window.dailyProgress = JSON.parse(localStorage.getItem("dailyProgress")) || [];
+
+    // Update the UI
+    if (typeof updateUI === "function") updateUI();
+
+    // Logout button
+    const logoutBtn = document.getElementById("logoutBtn");
+    if(logoutBtn){
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("currentUser");
+        window.location.href = "login.html";
+      });
+    }
+  });
   </script>
 </body>
 </html>

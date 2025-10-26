@@ -1,22 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
+  <script type="module">
+   // ✅ LOCALSTORAGE LOGIN CHECK
+   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (!currentUser) {
+      // if not logged in, redirect
+      window.location.href = "login.html";
+    } else {
+      // show welcome message
+      const welcomeEl = document.getElementById("welcomeUser");
+      if (welcomeEl) welcomeEl.textContent = `Welcome, ${currentUser.username}! 🎮`;
+    }
+    
+    // LOGOUT BUTTON
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("currentUser");
+        window.location.href = "login.html";
+      });
+    }
+  </script>
+  
 <head>
   <meta charset="UTF-8" />
   <title>📜 Study History</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="history-container container">
     <h1 class="title">📜 Study History</h1>
-    <div id="historyList"></div>
 
-    <div style="text-align:center;margin-top:18px;">
+    <div id="historyList" class="history-cards"></div>
+
+    <div style="text-align:center;margin-top:20px;">
       <button class="btn curved-btn" onclick="clearAllHistory()">Clear All</button>
-      <a href="index.html" class="back-btn" style="margin-left:12px;">🏠 Back to Main</a>
+      <a href="index.html" class="back-btn">🏠 Back to Main</a>
     </div>
   </div>
 
-  <script src="history.js"></script>
+  <script>
+    let sessionHistory = JSON.parse(localStorage.getItem("sessionHistory")) || [];
+
+    function renderHistory() {
+      const container = document.getElementById("historyList");
+      container.innerHTML = "";
+
+      if(sessionHistory.length === 0){
+        container.innerHTML = "<p style='text-align:center;color:#00d8ff;margin-top:20px;'>No sessions yet!</p>";
+        return;
+      }
+
+      sessionHistory.slice().reverse().forEach(session => {
+        const marks = session.marksGain.toFixed(1);
+        const xp = Math.floor(session.xpGain);
+        const durationH = (session.hours).toFixed(2);
+        const typeLabel = session.type === "study" ? "Study" :
+                          session.type === "homework" ? "Homework" : "Video";
+
+        container.innerHTML += `
+          <div class="history-card">
+            <div class="card-header">
+              <strong>${session.subjectName}</strong> - ${typeLabel}
+              <span class="xp-inline">(XP - ${xp})</span>
+            </div>
+            <div class="card-body">
+              <p>Marks gained: ${marks}</p>
+              <p>Duration: ${durationH}h ${session.pp ? '| PP' : ''} ${session.q ? '| Q' : ''}</p>
+              <p>Date: ${session.date}</p>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function clearAllHistory(){
+      if(!confirm("Clear all history?")) return;
+      sessionHistory = [];
+      localStorage.setItem("sessionHistory", JSON.stringify(sessionHistory));
+      renderHistory();
+    }
+
+    document.addEventListener("DOMContentLoaded", ()=>{
+      renderHistory();
+    });
+  </script>
+
+  <style>
+    /* History cards */
+    .history-cards {
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .history-card {
+      background: rgba(10,20,35,0.9);
+      border:1px solid rgba(0,216,255,0.08);
+      padding:14px;
+      border-radius:14px;
+      box-shadow:0 0 12px rgba(0,216,255,0.18);
+      transition:0.25s;
+    }
+    .history-card:hover {
+      transform: translateY(-2px);
+      box-shadow:0 0 18px rgba(0,216,255,0.28);
+    }
+    .card-header {
+      font-size:1.1rem;
+      color:#00d8ff;
+      margin-bottom:6px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .card-body p {
+      margin:2px 0;
+      color:#9feaff;
+      font-size:0.95rem;
+    }
+    .xp-inline { font-weight:700; color:#fff9a6; margin-left:6px; }
+
+    /* Back button */
+    .back-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #00ffff;
+      color: #000;
+      padding: 10px 25px;
+      border-radius: 10px;
+      border: none;
+      font-weight: bold;
+      z-index: 100;
+      transition: 0.3s;
+    }
+    .back-btn:hover {
+      background: #0077ff;
+      color: #fff;
+    }
+  </style>
 </body>
 </html>
